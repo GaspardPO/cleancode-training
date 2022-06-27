@@ -36,5 +36,9 @@ namespace SOLID.OpenClosePrinciple
             return new[] { directFlight, withDubaiStopover };
         }
 
+        public Itinerary OptimalItinerary(Trip trip, IItineraryPreference itineraryPreferencePreference)
+        {
+            return itineraryPreferencePreference.GetRelatedItinerary(ItinerariesFor(trip));
+        }
     }
 }

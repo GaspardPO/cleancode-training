@@ -13,7 +13,7 @@ namespace SOLID.OpenClosePrinciple
         {
             var trip = Trip.from(City.Paris).to(City.Tokyo);
 
-            var shortest = search.OptimalItinerary(trip, ItineraryPreference.Shortest);
+            var shortest = search.OptimalItinerary(trip, new ShortestItineraryPreference());
 
             Assert.NotNull(shortest);
             Assert.Equal("Direct flight", shortest.Label);
@@ -24,7 +24,7 @@ namespace SOLID.OpenClosePrinciple
         {
             var trip = Trip.from(City.Paris).to(City.Tokyo);
 
-            var cheapest = search.OptimalItinerary(trip, ItineraryPreference.Cheapest);
+            var cheapest = search.OptimalItinerary(trip, new CheapestItineraryPreference());
 
             Assert.NotNull(cheapest);
             Assert.Equal("With Dubai stopover", cheapest.Label);
