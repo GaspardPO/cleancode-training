@@ -103,45 +103,45 @@ namespace Trivia
 
         private void AskQuestion()
         {
-            if (CurrentCategory() == "Pop")
+            if (CurrentCategory() == Categories.Pop)
             {
                 Console.WriteLine(_popQuestions.First());
                 _popQuestions.RemoveFirst();
             }
             
-            if (CurrentCategory() == "Science")
+            if (CurrentCategory() == Categories.Science)
             {
                 Console.WriteLine(_scienceQuestions.First());
                 _scienceQuestions.RemoveFirst();
             }
             
-            if (CurrentCategory() == "Sports")
+            if (CurrentCategory() == Categories.Sports)
             {
                 Console.WriteLine(_sportsQuestions.First());
                 _sportsQuestions.RemoveFirst();
             }
             
-            if (CurrentCategory() == "Rock")
+            if (CurrentCategory() == Categories.Rock)
             {
                 Console.WriteLine(_rockQuestions.First());
                 _rockQuestions.RemoveFirst();
             }
         }
 
-        private string CurrentCategory()
+        private Categories CurrentCategory()
         {
             return _places[_currentPlayer] switch
             {
-                0 => "Pop",
-                4 => "Pop",
-                8 => "Pop",
-                1 => "Science",
-                5 => "Science",
-                9 => "Science",
-                2 => "Sports",
-                6 => "Sports",
-                10 => "Sports",
-                _ => "Rock"
+                0 => Categories.Pop,
+                4 => Categories.Pop,
+                8 => Categories.Pop,
+                1 => Categories.Science,
+                5 => Categories.Science,
+                9 => Categories.Science,
+                2 => Categories.Sports,
+                6 => Categories.Sports,
+                10 => Categories.Sports,
+                _ => Categories.Rock
             };
         }
 
@@ -214,4 +214,11 @@ namespace Trivia
         }
     }
 
+    public enum Categories
+    {
+        Sports = 0,
+        Science = 1,
+        Pop = 2,
+        Rock = 3,
+    }
 }
