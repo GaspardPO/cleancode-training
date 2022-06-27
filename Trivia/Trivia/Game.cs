@@ -63,7 +63,7 @@ namespace Trivia
         {
             Console.WriteLine(_players[_currentPlayer] + " is the current player");
             Console.WriteLine("They have rolled a " + roll);
-            
+
             if (PlayerIsNotLeavingPenaltyBox(roll))
             {
                 Console.WriteLine(_players[_currentPlayer] + " is not getting out of the penalty box");
@@ -98,15 +98,14 @@ namespace Trivia
 
         private void DisplayNewPlayerPlace()
         {
-
             Console.WriteLine(_players[_currentPlayer]
                 + "'s new location is "
                 + _places[_currentPlayer]);
             Console.WriteLine("The category is " + CurrentCategory());
         }
+
         private void MovePlayer(int roll)
         {
-
             _places[_currentPlayer] += roll;
             if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
         }
@@ -137,17 +136,11 @@ namespace Trivia
 
         private Categories CurrentCategory()
         {
-            return _places[_currentPlayer] switch
+            return (_places[_currentPlayer] % 4) switch
             {
                 0 => Categories.Pop,
-                4 => Categories.Pop,
-                8 => Categories.Pop,
                 1 => Categories.Science,
-                5 => Categories.Science,
-                9 => Categories.Science,
                 2 => Categories.Sports,
-                6 => Categories.Sports,
-                10 => Categories.Sports,
                 _ => Categories.Rock
             };
         }
@@ -159,34 +152,8 @@ namespace Trivia
         /// <returns></returns>
         public bool WasCorrectlyAnswered()
         {
-            if (PlayerIsInPenaltyBox())
-            {
-                switch (_isGettingOutOfPenaltyBox)
-                {
-                    case true:
-                        {
-                            Console.WriteLine("Answer was correct!!!!");
-                            _purses[_currentPlayer]++;
-                            Console.WriteLine(_players[_currentPlayer]
-                                + " now has "
-                                + _purses[_currentPlayer]
-                                + " Gold Coins.");
-
-                            var winner = _purses[_currentPlayer] != 6;
-                            _currentPlayer++;
-                            if (_currentPlayer == _players.Count) _currentPlayer = 0;
-
-                            return winner;
-                        }
-                    default:
-                        {
-                            _currentPlayer++;
-                            if (_currentPlayer == _players.Count) _currentPlayer = 0;
-                            return true;
-                        }
-                }
-            }
-            else
+            var winner = true;
+            if ((PlayerIsInPenaltyBox() && _isGettingOutOfPenaltyBox) || !PlayerIsInPenaltyBox())
             {
                 Console.WriteLine("Answer was correct!!!!");
                 _purses[_currentPlayer]++;
@@ -195,12 +162,18 @@ namespace Trivia
                     + _purses[_currentPlayer]
                     + " Gold Coins.");
 
-                var winner = _purses[_currentPlayer] != 6;
-                _currentPlayer++;
-                if (_currentPlayer == _players.Count) _currentPlayer = 0;
-
-                return winner;
+                winner = _purses[_currentPlayer] != 6;
             }
+
+            NextPlayer();
+            return winner;
+        }
+
+
+        private void NextPlayer()
+        {
+            _currentPlayer++;
+            if (_currentPlayer == _players.Count) _currentPlayer = 0;
         }
 
         /// <summary>
@@ -213,8 +186,7 @@ namespace Trivia
             Console.WriteLine(_players[_currentPlayer] + " was sent to the penalty box");
             _inPenaltyBox[_currentPlayer] = true;
 
-            _currentPlayer++;
-            if (_currentPlayer == _players.Count) _currentPlayer = 0;
+            NextPlayer();
             //Must always return false 
             return true;
         }
