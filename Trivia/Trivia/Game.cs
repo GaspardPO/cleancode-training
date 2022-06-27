@@ -61,44 +61,54 @@ namespace Trivia
 
         public void Roll(int roll)
         {
-            Console.WriteLine(_players[_currentPlayer] + " is the current player"); Console.WriteLine("They have rolled a " + roll);
-
-
-            if (_inPenaltyBox[_currentPlayer])
+            Console.WriteLine(_players[_currentPlayer] + " is the current player");
+            Console.WriteLine("They have rolled a " + roll);
+            
+            if (PlayerIsNotLeavingPenaltyBox(roll))
             {
-                if (roll % 2 != 0)
-                {
-                    //User is getting out of penalty box
-                    _isGettingOutOfPenaltyBox = true;
-                    //Write that user is getting out
-                    Console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");
-                    // add roll to place
-                    _places[_currentPlayer] += roll;
-                    if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
-
-                    Console.WriteLine(_players[_currentPlayer]
-                            + "'s new location is "
-                            + _places[_currentPlayer]);
-                    Console.WriteLine("The category is " + CurrentCategory());
-                    AskQuestion();
-                }
-                else
-                {
-                    Console.WriteLine(_players[_currentPlayer] + " is not getting out of the penalty box");
-                    _isGettingOutOfPenaltyBox = false;
-                }
+                Console.WriteLine(_players[_currentPlayer] + " is not getting out of the penalty box");
+                _isGettingOutOfPenaltyBox = false;
+                return;
             }
-            else
+
+            if (PlayerIsInPenaltyBox())
             {
-                _places[_currentPlayer] += roll;
-                if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
-
-                Console.WriteLine(_players[_currentPlayer]
-                        + "'s new location is "
-                        + _places[_currentPlayer]);
-                Console.WriteLine("The category is " + CurrentCategory());
-                AskQuestion();
+                //User is getting out of penalty box
+                _isGettingOutOfPenaltyBox = true;
+                //Write that user is getting out
+                Console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");
             }
+
+            // add roll to place        
+            MovePlayer(roll);
+
+            DisplayNewPlayerPlace();
+            AskQuestion();
+        }
+        private bool PlayerIsInPenaltyBox()
+        {
+
+            return _inPenaltyBox[_currentPlayer];
+        }
+        private bool PlayerIsNotLeavingPenaltyBox(int roll)
+        {
+
+            return PlayerIsInPenaltyBox() && roll % 2 == 0;
+        }
+
+        private void DisplayNewPlayerPlace()
+        {
+
+            Console.WriteLine(_players[_currentPlayer]
+                + "'s new location is "
+                + _places[_currentPlayer]);
+            Console.WriteLine("The category is " + CurrentCategory());
+        }
+        private void MovePlayer(int roll)
+        {
+
+            _places[_currentPlayer] += roll;
+            if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
         }
 
         private void AskQuestion()
@@ -143,14 +153,13 @@ namespace Trivia
         }
 
 
-
         /// <summary>
         /// To call when the answer is right
         /// </summary>
         /// <returns></returns>
         public bool WasCorrectlyAnswered()
         {
-            if (_inPenaltyBox[_currentPlayer])
+            if (PlayerIsInPenaltyBox())
             {
                 switch (_isGettingOutOfPenaltyBox)
                 {
@@ -182,9 +191,9 @@ namespace Trivia
                 Console.WriteLine("Answer was correct!!!!");
                 _purses[_currentPlayer]++;
                 Console.WriteLine(_players[_currentPlayer]
-                        + " now has "
-                        + _purses[_currentPlayer]
-                        + " Gold Coins.");
+                    + " now has "
+                    + _purses[_currentPlayer]
+                    + " Gold Coins.");
 
                 var winner = _purses[_currentPlayer] != 6;
                 _currentPlayer++;
