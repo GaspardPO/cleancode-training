@@ -10,11 +10,7 @@ namespace Trivia
     /// </summary>
     public class Game
     {
-        private const int PenaltyBoxSize = 6;
-
         private readonly List<Player> _players = new List<Player>();
-
-        private readonly bool[] _inPenaltyBox = new bool[PenaltyBoxSize];
 
         private readonly LinkedList<string> _popQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _scienceQuestions = new LinkedList<string>();
@@ -43,7 +39,6 @@ namespace Trivia
         public void Add(string playerName)
         {
             _players.Add(new Player(playerName));
-            _inPenaltyBox[HowManyPlayers()] = false;
 
             Console.WriteLine(playerName + " was added");
             Console.WriteLine("They are player number " + _players.Count);
@@ -83,7 +78,7 @@ namespace Trivia
         private bool PlayerIsInPenaltyBox()
         {
 
-            return _inPenaltyBox[_currentPlayer];
+            return _players[_currentPlayer].IsInPenaltyBox;
         }
         private bool PlayerIsNotLeavingPenaltyBox(int roll)
         {
@@ -178,7 +173,7 @@ namespace Trivia
         {
             Console.WriteLine("Question was incorrectly answered");
             Console.WriteLine(_players[_currentPlayer] + " was sent to the penalty box");
-            _inPenaltyBox[_currentPlayer] = true;
+            _players[_currentPlayer].GoToPenaltyBox();
 
             NextPlayer();
             //Must always return false 

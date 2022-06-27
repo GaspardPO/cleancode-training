@@ -7,13 +7,14 @@ namespace Trivia
         private string name;
         private int position;
         private int score;
+        private bool isInPenaltyBox;
 
         public Player(string name)
         {
             this.name = name;
         }
 
-        public bool IsInPenaltyBox => false;
+        public bool IsInPenaltyBox => isInPenaltyBox;
 
         public int GetPosition()
         {
@@ -43,6 +44,11 @@ namespace Trivia
         public void Score()
         {
             score++;
+        }
+
+        public void GoToPenaltyBox()
+        {
+            isInPenaltyBox = true;
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Tests
         }
         
         [Fact]
-        public void Should()
+        public void Should_score()
         {
             //Arrange
             var player = new Player("Jack");
@@ -57,7 +57,19 @@ namespace Tests
             
             //Assert
             Assert.Equal(1, player.GetScore());
-            
+        }
+
+        [Fact]
+        public void Should()
+        {
+            //Arrange
+            var player = new Player("Jack");
+
+            //Act
+            player.GoToPenaltyBox();
+
+            //Assert
+            Assert.True(player.IsInPenaltyBox);
         }
     }
 }
