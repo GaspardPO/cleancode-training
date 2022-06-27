@@ -98,15 +98,14 @@ namespace Trivia
 
         private void DisplayNewPlayerPlace()
         {
-
             Console.WriteLine(_players[_currentPlayer]
                 + "'s new location is "
                 + _places[_currentPlayer]);
             Console.WriteLine("The category is " + CurrentCategory());
         }
+
         private void MovePlayer(int roll)
         {
-
             _places[_currentPlayer] += roll;
             if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
         }
@@ -137,17 +136,11 @@ namespace Trivia
 
         private Categories CurrentCategory()
         {
-            return _places[_currentPlayer] switch
+            return (_places[_currentPlayer] % 4) switch
             {
                 0 => Categories.Pop,
-                4 => Categories.Pop,
-                8 => Categories.Pop,
                 1 => Categories.Science,
-                5 => Categories.Science,
-                9 => Categories.Science,
                 2 => Categories.Sports,
-                6 => Categories.Sports,
-                10 => Categories.Sports,
                 _ => Categories.Rock
             };
         }
