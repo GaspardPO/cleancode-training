@@ -103,29 +103,26 @@ namespace Trivia
 
         private void AskQuestion()
         {
-            if (CurrentCategory() == Categories.Pop)
+            var currentCategory = CurrentCategory();
+            string question = NextQuestion(currentCategory);
+
+            Console.WriteLine(question);
+        }
+
+        private string NextQuestion(Categories currentCategory)
+        {
+            var questions = currentCategory switch
             {
-                Console.WriteLine(_popQuestions.First());
-                _popQuestions.RemoveFirst();
-            }
-            
-            if (CurrentCategory() == Categories.Science)
-            {
-                Console.WriteLine(_scienceQuestions.First());
-                _scienceQuestions.RemoveFirst();
-            }
-            
-            if (CurrentCategory() == Categories.Sports)
-            {
-                Console.WriteLine(_sportsQuestions.First());
-                _sportsQuestions.RemoveFirst();
-            }
-            
-            if (CurrentCategory() == Categories.Rock)
-            {
-                Console.WriteLine(_rockQuestions.First());
-                _rockQuestions.RemoveFirst();
-            }
+                Categories.Pop => _popQuestions,
+                Categories.Sports => _sportsQuestions,
+                Categories.Rock => _rockQuestions,
+                Categories.Science => _scienceQuestions,
+                _ => throw new NotImplementedException(),
+            };
+
+            var question = questions.First();
+            questions.RemoveFirst();
+            return question;
         }
 
         private Categories CurrentCategory()
