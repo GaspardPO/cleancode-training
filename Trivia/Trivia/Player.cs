@@ -1,22 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Trivia
 {
     public class Player
     {
         private string name;
+        private int position;
 
         public Player(string name)
         {
             this.name = name;
         }
 
-        public bool IsInPenaltyBox => false; 
+        public bool IsInPenaltyBox => false;
 
         public int GetPosition()
         {
-            return 0;
+            return position;
         }
 
         public int GetPurse()
@@ -32,6 +32,11 @@ namespace Trivia
         public override string ToString()
         {
             return name;
+        }
+
+        public void Move(int roll)
+        {
+            position += roll;
         }
     }
 }

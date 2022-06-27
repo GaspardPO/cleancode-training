@@ -17,5 +17,19 @@ namespace Tests
             Assert.False(player.IsInPenaltyBox);
             Assert.Equal("Jack", player.GetName());
         }
+
+        [Fact]
+        public void Should_move_player_with_roll_value()
+        {
+            //Arrange
+            var player = new Player("Jack");
+            int roll = 4;
+
+            // Act
+            player.Move(roll);
+
+            //Assert
+            Assert.Equal(roll, player.GetPosition());
+        }
     }
 }

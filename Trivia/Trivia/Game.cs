@@ -10,6 +10,7 @@ namespace Trivia
     /// </summary>
     public class Game
     {
+        private const int BoardSize = 12;
         private const int PenaltyBoxSize = 6;
 
         private readonly List<Player> _players = new List<Player>();
@@ -106,8 +107,9 @@ namespace Trivia
 
         private void MovePlayer(int roll)
         {
+            _players[_currentPlayer].Move(roll);
             _places[_currentPlayer] += roll;
-            if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
+            if (_places[_currentPlayer] >= BoardSize) _places[_currentPlayer] -= BoardSize;
         }
 
         private void AskQuestion()
