@@ -12,7 +12,7 @@ namespace Trivia
     {
         private const int PenaltyBoxSize = 6;
 
-        private readonly List<string> _players = new List<string>();
+        private readonly List<Player> _players = new List<Player>();
 
         private readonly int[] _places = new int[6];
         private readonly int[] _purses = new int[6];
@@ -45,7 +45,7 @@ namespace Trivia
 
         public void Add(string playerName)
         {
-            _players.Add(playerName);
+            _players.Add(new Player(playerName));
             _places[HowManyPlayers()] = 0;
             _purses[HowManyPlayers()] = 0;
             _inPenaltyBox[HowManyPlayers()] = false;
