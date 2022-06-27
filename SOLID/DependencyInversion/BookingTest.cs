@@ -7,12 +7,12 @@ namespace SOLID.DependencyInversion
 {
     public class BookingTest
     {
-        private Mock<AvailabilityDaoImpl> availabilities;
+        private Mock<IAvailabilityDao> availabilities;
         private BookingService booking;
 
         public BookingTest()
         {
-            availabilities = new Mock<AvailabilityDaoImpl>();
+            availabilities = new Mock<IAvailabilityDao>();
             booking = new BookingService(availabilities.Object);
         }
 
