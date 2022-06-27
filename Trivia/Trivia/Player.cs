@@ -6,6 +6,7 @@ namespace Trivia
     {
         private string name;
         private int position;
+        private int score;
 
         public Player(string name)
         {
@@ -21,7 +22,7 @@ namespace Trivia
 
         public int GetScore()
         {
-            return 0;
+            return score;
         }
 
         public string GetName()
@@ -41,7 +42,7 @@ namespace Trivia
 
         public void Score()
         {
-            throw new NotImplementedException();
+            score++;
         }
     }
 }
