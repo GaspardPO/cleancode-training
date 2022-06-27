@@ -1,25 +1,21 @@
+using System.Collections.Generic;
+
 namespace SOLID.Liskov
 {
-    public class Square : Rectangle
+    public class Square
     {
-        public override int Height
+        public int Height
         {
-            set => Side = value;
+            get => Side;
         }
 
-        public override int Width
+        public int Width
         {
-            set => Side = value;
+            get => Side;
         }
 
-        public int Side
-        {
-            get => Height;
-            set
-            {
-                base.Height = value;
-                base.Width = value;
-            }
-        }
+        public int Side { get; set; }
+
+        public int Area => Side*Side;
     }
 }
