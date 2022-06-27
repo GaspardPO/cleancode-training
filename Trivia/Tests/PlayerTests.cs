@@ -13,7 +13,7 @@ namespace Tests
 
             //Assert
             Assert.Equal(0, player.GetPosition());
-            Assert.Equal(0, player.GetPurse());
+            Assert.Equal(0, player.GetScore());
             Assert.False(player.IsInPenaltyBox);
             Assert.Equal("Jack", player.GetName());
         }
@@ -30,6 +30,20 @@ namespace Tests
 
             //Assert
             Assert.Equal(roll, player.GetPosition());
+        }
+
+        [Fact]
+        public void Should_score_points_when_answered_correctly()
+        {
+            //Arrange
+            var player = new Player("Jack");
+            
+            //Act 
+            player.Score();
+            
+            //Assert
+            Assert.Equal(1, player.GetScore());
+            
         }
     }
 }

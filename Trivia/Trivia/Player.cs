@@ -19,7 +19,7 @@ namespace Trivia
             return position;
         }
 
-        public int GetPurse()
+        public int GetScore()
         {
             return 0;
         }
@@ -37,6 +37,11 @@ namespace Trivia
         public void Move(int roll)
         {
             position += roll;
+        }
+
+        public void Score()
+        {
+            throw new NotImplementedException();
         }
     }
 }

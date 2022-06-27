@@ -10,12 +10,10 @@ namespace Trivia
     /// </summary>
     public class Game
     {
-        private const int BoardSize = 12;
         private const int PenaltyBoxSize = 6;
 
         private readonly List<Player> _players = new List<Player>();
 
-        private readonly int[] _places = new int[6];
         private readonly int[] _purses = new int[6];
 
         private readonly bool[] _inPenaltyBox = new bool[PenaltyBoxSize];
@@ -47,7 +45,6 @@ namespace Trivia
         public void Add(string playerName)
         {
             _players.Add(new Player(playerName));
-            _places[HowManyPlayers()] = 0;
             _purses[HowManyPlayers()] = 0;
             _inPenaltyBox[HowManyPlayers()] = false;
 
@@ -101,15 +98,13 @@ namespace Trivia
         {
             Console.WriteLine(_players[_currentPlayer]
                 + "'s new location is "
-                + _places[_currentPlayer]);
+                + Board.GetPlayerPlace(_players[_currentPlayer]));
             Console.WriteLine("The category is " + CurrentCategory());
         }
 
         private void MovePlayer(int roll)
         {
             _players[_currentPlayer].Move(roll);
-            _places[_currentPlayer] += roll;
-            if (_places[_currentPlayer] >= BoardSize) _places[_currentPlayer] -= BoardSize;
         }
 
         private void AskQuestion()
@@ -128,7 +123,7 @@ namespace Trivia
                 Categories.Sports => _sportsQuestions,
                 Categories.Rock => _rockQuestions,
                 Categories.Science => _scienceQuestions,
-                _ => throw new NotImplementedException(),
+                _ => throw new NotImplementedException()
             };
 
             var question = questions.First();
@@ -138,7 +133,7 @@ namespace Trivia
 
         private Categories CurrentCategory()
         {
-            return (_places[_currentPlayer] % 4) switch
+            return (_players[_currentPlayer].GetPosition() % 4) switch
             {
                 0 => Categories.Pop,
                 1 => Categories.Science,
@@ -194,11 +189,4 @@ namespace Trivia
         }
     }
 
-    public enum Categories
-    {
-        Sports = 0,
-        Science = 1,
-        Pop = 2,
-        Rock = 3,
-    }
 }
