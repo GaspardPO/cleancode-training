@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using Trivia;
@@ -148,6 +151,62 @@ namespace Tests
 
             // Act
             Assert.Throws<ArgumentException>(() => game.HasRolled(roll));
+        }
+
+        [Fact]
+        public void Should()
+        {
+            //Arrange
+            var questions = new Questions();
+            questions.Add(new PopQuestion("New pop question"));
+            
+            //Act
+            var popQuestion = questions.NextQuestion(Categories.Pop);
+            
+            //Assert
+            Assert.Equal(new PopQuestion("New pop question"), popQuestion);
+
+        }
+    }
+
+    public class PopQuestion : IEquatable<PopQuestion>
+    {
+        private readonly string _label;
+
+
+        public PopQuestion(string label)
+        {
+            _label = label;
+        }
+
+        public Categories GetCategory()
+        {
+            return Categories.Pop;
+        }
+        
+        public bool Equals(PopQuestion other)
+        {
+            return other != null && _label == other._label;
+        }
+        
+        public override int GetHashCode()
+        {
+            return (_label != null ? _label.GetHashCode() : 0);
+        }
+    }
+
+    public class Questions
+    {
+        private readonly List<PopQuestion> _questions = new List<PopQuestion>();
+
+        public void Add(PopQuestion popQuestion)
+        {
+            _questions.Add(popQuestion);
+        }
+
+        public PopQuestion NextQuestion(Categories pop)
+        {
+            return _questions.First();
         }
     }
 }
