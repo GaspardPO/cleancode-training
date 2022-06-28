@@ -33,7 +33,7 @@ namespace Tests
             game.HasRolled(3);
             Approvals.Verify(fakeconsole.ToString());
         }
-        
+
         [Fact]
         public void Test2()
         {
@@ -72,7 +72,7 @@ namespace Tests
             game.NextPlayer();
             Approvals.Verify(fakeconsole.ToString());
         }
-        
+
         [Fact]
         public void Test3()
         {
@@ -138,13 +138,13 @@ namespace Tests
                 game.AnswerIsCorrect();
                 game.NextPlayer();
             }
-            
+
             var hasAWinner = game.HasAWinner();
-            
+
             // Assert
             Assert.True(hasAWinner);
         }
-        
+
         [Theory]
         [InlineData(12)]
         [InlineData(0)]
@@ -163,15 +163,15 @@ namespace Tests
             //Arrange
             var questions = new Questions();
             questions.Add(new PopQuestion("New pop question"));
-            
+
             //Act
             var popQuestion = questions.NextQuestion(Categories.Pop);
-            
+
             //Assert
             Assert.Equal(new PopQuestion("New pop question"), popQuestion);
 
         }
-        
+
         [Fact]
         public void Should_retrieve_next_questin_by_category()
         {
@@ -179,16 +179,16 @@ namespace Tests
             var questions = new Questions();
             questions.Add(new PopQuestion("New pop question"));
             questions.Add(new ScienceQuestion("New science question"));
-            
+
             //Act
             var scienceQuestion = questions.NextQuestion(Categories.Science);
-            
+
             //Assert
             Assert.Equal(new ScienceQuestion("New science question"), scienceQuestion);
 
         }
 
-                [Fact]
+        [Fact]
         public void Should()
         {
             //Arrange
@@ -197,16 +197,37 @@ namespace Tests
             questions.Add(new ScienceQuestion("New science question"));
             questions.Add(new SportQuestion("New sport question"));
             questions.Add(new SportQuestion("New sport question 2"));
-            
+
             //Act
             questions.NextQuestion(Categories.Sports);
             var sportQuestion = questions.NextQuestion(Categories.Sports);
-            
+
             //Assert
             Assert.Equal(new SportQuestion("New sport question 2"), sportQuestion);
 
         }
+
+        [Fact]
+        public void Should_trow_InvalidOperationException_when_no_next_question()
+        {
+            //Arrange
+            var questions = new Questions();
+            questions.Add(new PopQuestion("New pop question"));
+            questions.Add(new ScienceQuestion("New science question"));
+            questions.Add(new SportQuestion("New sport question"));
+            questions.Add(new SportQuestion("New sport question 2"));
+            questions.Add(new RockQuestion("New rock question 2"));
+
+            //Act
+            questions.NextQuestion(Categories.Sports);
+            questions.NextQuestion(Categories.Rock);
+
+            //Assert
+            Assert.Throws<InvalidOperationException>(() => questions.NextQuestion(Categories.Rock));
+        }
+
     }
+
 
     public class SportQuestion : Question
     {
@@ -281,20 +302,29 @@ namespace Tests
     public class Questions
     {
         private readonly List<IQuestion> _questions = new List<IQuestion>();
-        private Dictionary<Categories,int> _currentQuestion= new Dictionary<Categories,int>();
+        private Dictionary<Categories, int> _currentQuestion = new Dictionary<Categories, int>();
 
         public void Add(IQuestion question)
         {
-            if(!_currentQuestion.ContainsKey(question.GetCategory()))
+            if (!_currentQuestion.ContainsKey(question.GetCategory()))
             {
-                _currentQuestion.Add(question.GetCategory(),0);
+                _currentQuestion.Add(question.GetCategory(), 0);
             }
             _questions.Add(question);
         }
 
         public IQuestion NextQuestion(Categories category)
         {
-            return _questions.Where(question => question.GetCategory().Equals(category)).ToList()[_currentQuestion[category]];
+            _currentQuestion[category]++;
+
+            List<IQuestion> questions = _questions.Where(question => question.GetCategory().Equals(category)).ToList();
+
+            if (questions.Count <= _currentQuestion[category] - 1)
+            {
+                throw new InvalidOperationException();
+            }
+
+            return questions[_currentQuestion[category] - 1];
         }
     }
 }
