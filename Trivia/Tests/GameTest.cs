@@ -5,7 +5,6 @@ using ApprovalTests.Reporters;
 using Trivia;
 using Xunit;
 
-
 namespace Tests
 {
     [UseReporter(typeof(DiffReporter))]
@@ -117,6 +116,26 @@ namespace Tests
 
             // Assert
             Assert.False(hasAWinner);
+        }
+
+        [Fact]
+        public void Should_have_a_winner()
+        {
+            //Arrange
+            var game = new Game(new Players(new Player("Cedric"), new Player("Eloïse")));
+
+            // Act
+            for (var i = 0; i < 11; i++)
+            {
+                game.HasRolled(1);
+                game.AnswerIsCorrect();
+                game.NextPlayer();
+            }
+            
+            var hasAWinner = game.HasAWinner();
+            
+            // Assert
+            Assert.True(hasAWinner);
         }
     }
 }

@@ -36,5 +36,10 @@ namespace Trivia
         {
             return _players.ToDictionary(player => player.GetName(), player => _players.IndexOf(player)+1);
         }
+
+        public bool Any( Func<Player, bool> predicate)
+        {
+            return _players.Any(predicate);
+        }
     }
 }

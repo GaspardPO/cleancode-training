@@ -10,7 +10,7 @@ namespace Trivia
     /// </summary>
     public class Game
     {
-        private readonly Players _players = new Players();
+        private readonly Players _players;
 
         private readonly LinkedList<string> _popQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _scienceQuestions = new LinkedList<string>();
@@ -124,7 +124,7 @@ namespace Trivia
 
         public bool HasAWinner()
         {
-            return false;
+            return _players.Any(player => player.GetScore() == 6);
         }
 
         private Categories CurrentCategory()
@@ -144,10 +144,8 @@ namespace Trivia
         /// To call when the answer is right
         /// </summary>
         /// <returns></returns>
-        public bool AnswerIsCorrect()
+        public void AnswerIsCorrect()
         {
-            // KO++
-            var winner = true;
             if ((PlayerIsInPenaltyBox() && _isGettingOutOfPenaltyBox) || !PlayerIsInPenaltyBox())
             {
                 Console.WriteLine("Answer was correct!!!!");
@@ -156,11 +154,7 @@ namespace Trivia
                     + " now has "
                     + _players.Current().GetScore()
                     + " Gold Coins.");
-
-                winner = _players.Current().GetScore() != 6;
             }
-
-            return winner;
         }
 
         public void NextPlayer()
@@ -173,15 +167,12 @@ namespace Trivia
         /// To call when the answer is right
         /// </summary>
         /// <returns></returns>
-        public bool AnswerIsWrong()
+        public void AnswerIsWrong()
         {
             // KO
             Console.WriteLine("Question was incorrectly answered");
             Console.WriteLine(_players.Current() + " was sent to the penalty box");
             _players.Current().GoToPenaltyBox();
-
-            //Must always return false 
-            return true;
         }
     }
 
