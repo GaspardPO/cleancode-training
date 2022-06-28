@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using Trivia;
+﻿using Trivia;
 
 using Xunit;
 
@@ -9,7 +7,7 @@ namespace Tests
     public class PlayersTests
     {
         [Fact]
-        public void Should()
+        public void Should_create_players_with_correct_player_count()
         {
             // Arrange
 
@@ -19,18 +17,16 @@ namespace Tests
             // Assert
             Assert.Equal(2, players.Count);
         }
-    }
-
-    public class Players
-    {
-        private readonly List<Player> _players = new List<Player>();
-
-        public Players(Player player1, Player player2)
+        
+        [Fact]
+        public void Should_add_new_player()
         {
-            _players.Add(player1);
-            _players.Add(player2);
+            // Arrange
+            var players = new Players(new Player("Julien"), new Player("Fabien"));
+            // Act
+            players.Add(new Player("Yasmine"));
+            // Assert
+            Assert.Equal(3, players.Count);
         }
-
-        public int Count => _players.Count;
     }
 }
