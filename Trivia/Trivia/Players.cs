@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Trivia
@@ -6,6 +7,7 @@ namespace Trivia
     public class Players
     {
         private readonly List<Player> _players = new List<Player>();
+        private int _currentPosition = 0;
 
         public Players(params Player[] players)
         {
@@ -17,6 +19,16 @@ namespace Trivia
         public void Add(Player player)
         {
             _players.Add(player);
+        }
+
+        public Player Current()
+        {
+            return _players[_currentPosition];
+        }
+
+        public void Next()
+        {
+            _currentPosition = _currentPosition + 1 == _players.Count ? 0 : _currentPosition+1;
         }
     }
 }
