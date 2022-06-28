@@ -45,6 +45,10 @@ namespace Trivia
 
         public void HasRolled(int roll)
         {
+            if (roll > 6 || roll < 1)
+            {
+                throw new ArgumentException();
+            }
             // KO
             Console.WriteLine(_players.Current() + " is the current player");
             Console.WriteLine("They have rolled a " + roll);

@@ -16,14 +16,14 @@ namespace Tests
             var fakeconsole = new StringWriter();
             Console.SetOut(fakeconsole);
             var game = new Game(new Players(new Player("Cedric")));
-            game.HasRolled(12);
+            game.HasRolled(2);
             game.AnswerIsWrong();
             game.NextPlayer();
             game.HasRolled(2);
-            game.HasRolled(13);
+            game.HasRolled(3);
             game.AnswerIsCorrect();
             game.NextPlayer();
-            game.HasRolled(13);
+            game.HasRolled(3);
             Approvals.Verify(fakeconsole.ToString());
         }
         
@@ -136,6 +136,18 @@ namespace Tests
             
             // Assert
             Assert.True(hasAWinner);
+        }
+        
+        [Theory]
+        [InlineData(12)]
+        [InlineData(0)]
+        public void Should_throw_error_if_roll_is_not_valid(int roll)
+        {
+            //Arrange
+            var game = new Game(new Players(new Player("Cedric"), new Player("Eloïse")));
+
+            // Act
+            Assert.Throws<ArgumentException>(() => game.HasRolled(roll));
         }
     }
 }
