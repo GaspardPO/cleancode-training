@@ -19,8 +19,14 @@ namespace Trivia
 
         private bool _isGettingOutOfPenaltyBox;
 
-        public Game()
+        public Game(Players players)
         {
+            _players = players;
+            foreach (var (name, position) in _players.GetPositions())
+            {
+                Console.WriteLine(name + " was added"); 
+                Console.WriteLine("They are player number " + position);
+            }
             for (var i = 0; i < 50; i++)
             {
                 _popQuestions.AddLast("Pop Question " + i);
@@ -28,21 +34,14 @@ namespace Trivia
                 _sportsQuestions.AddLast("Sports Question " + i);
                 _rockQuestions.AddLast("Rock Question " + i);
             }
+            
         }
 
         public bool IsPlayable()
         {
             return (HowManyPlayers() >= 2);
         }
-
-        public void Add(string playerName)
-        {
-            _players.Add(new Player(playerName));
-
-            Console.WriteLine(playerName + " was added");
-            Console.WriteLine("They are player number " + _players.Count);
-        }
-
+        
         private int HowManyPlayers()
         {
             return _players.Count;

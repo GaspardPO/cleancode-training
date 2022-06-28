@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,6 +30,11 @@ namespace Trivia
         public void Next()
         {
             _currentPosition = (_currentPosition + 1) % _players.Count;
+        }
+
+        public Dictionary<string, int> GetPositions()
+        {
+            return _players.ToDictionary(player => player.GetName(), player => _players.IndexOf(player)+1);
         }
     }
 }
