@@ -1,11 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+
 using ApprovalTests;
 using ApprovalTests.Reporters;
+
 using Trivia;
+
 using Xunit;
 
 namespace Tests
@@ -185,54 +189,61 @@ namespace Tests
         }
     }
 
-    public class ScienceQuestion : IEquatable<ScienceQuestion>, IQuestion
+    public class ScienceQuestion : Question
     {
-        private readonly string _label;
+        public ScienceQuestion(string label) : base(label) { }
 
-        public ScienceQuestion(string label)
-        {
-            _label = label;
-        }
-
-        public Categories GetCategory()
+        public override Categories GetCategory()
         {
             return Categories.Science;
-        }
-        
-        public bool Equals(ScienceQuestion other)
-        {
-            return other != null && _label == other._label;
         }
     }
 
     public interface IQuestion
     {
+        string GetLabel();
+
         Categories GetCategory();
     }
 
-    public class PopQuestion : IEquatable<PopQuestion>, IQuestion
+    public abstract class Question : IQuestion, IEquatable<IQuestion>
     {
         private readonly string _label;
 
-
-        public PopQuestion(string label)
+        protected Question(string label)
         {
             _label = label;
         }
 
-        public Categories GetCategory()
+        public bool Equals(IQuestion other)
         {
-            return Categories.Pop;
+            return other != null &&
+                _label == other.GetLabel() &&
+                GetCategory() == other.GetCategory();
         }
-        
-        public bool Equals(PopQuestion other)
-        {
-            return other != null && _label == other._label;
-        }
-        
+
+        public abstract Categories GetCategory();
+
         public override int GetHashCode()
         {
             return (_label != null ? _label.GetHashCode() : 0);
+        }
+
+        public string GetLabel()
+        {
+            return _label;
+        }
+    }
+
+    public class PopQuestion : Question
+    {
+        public PopQuestion(string label) : base(label)
+        {
+        }
+
+        public override Categories GetCategory()
+        {
+            return Categories.Pop;
         }
     }
 
