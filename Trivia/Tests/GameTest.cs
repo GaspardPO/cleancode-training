@@ -154,7 +154,7 @@ namespace Tests
         }
 
         [Fact]
-        public void Should()
+        public void Should_add_pop_question()
         {
             //Arrange
             var questions = new Questions();
@@ -167,9 +167,50 @@ namespace Tests
             Assert.Equal(new PopQuestion("New pop question"), popQuestion);
 
         }
+        
+        [Fact]
+        public void Should()
+        {
+            //Arrange
+            var questions = new Questions();
+            questions.Add(new PopQuestion("New pop question"));
+            questions.Add(new ScienceQuestion("New science question"));
+            
+            //Act
+            var scienceQuestion = questions.NextQuestion(Categories.Science);
+            
+            //Assert
+            Assert.Equal(new ScienceQuestion("New science question"), scienceQuestion);
+
+        }
     }
 
-    public class PopQuestion : IEquatable<PopQuestion>
+    public class ScienceQuestion : IEquatable<ScienceQuestion>, IQuestion
+    {
+        private readonly string _label;
+
+        public ScienceQuestion(string label)
+        {
+            _label = label;
+        }
+
+        public Categories GetCategory()
+        {
+            return Categories.Science;
+        }
+        
+        public bool Equals(ScienceQuestion other)
+        {
+            return other != null && _label == other._label;
+        }
+    }
+
+    public interface IQuestion
+    {
+        Categories GetCategory();
+    }
+
+    public class PopQuestion : IEquatable<PopQuestion>, IQuestion
     {
         private readonly string _label;
 
@@ -197,16 +238,16 @@ namespace Tests
 
     public class Questions
     {
-        private readonly List<PopQuestion> _questions = new List<PopQuestion>();
+        private readonly List<IQuestion> _questions = new List<IQuestion>();
 
-        public void Add(PopQuestion popQuestion)
+        public void Add(IQuestion question)
         {
-            _questions.Add(popQuestion);
+            _questions.Add(question);
         }
 
-        public PopQuestion NextQuestion(Categories pop)
+        public IQuestion NextQuestion(Categories category)
         {
-            return _questions.First();
+            return _questions.First(question => question.GetCategory().Equals(category));
         }
     }
 }
