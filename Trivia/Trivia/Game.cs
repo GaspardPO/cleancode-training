@@ -47,7 +47,7 @@ namespace Trivia
             return _players.Count;
         }
 
-        public void Roll(int roll)
+        public void HasRolled(int roll)
         {
             Console.WriteLine(_players.Current() + " is the current player");
             Console.WriteLine("They have rolled a " + roll);
@@ -137,7 +137,7 @@ namespace Trivia
         /// To call when the answer is right
         /// </summary>
         /// <returns></returns>
-        public bool WasCorrectlyAnswered()
+        public bool AnswerIsCorrect()
         {
             var winner = true;
             if ((PlayerIsInPenaltyBox() && _isGettingOutOfPenaltyBox) || !PlayerIsInPenaltyBox())
@@ -166,7 +166,7 @@ namespace Trivia
         /// To call when the answer is right
         /// </summary>
         /// <returns></returns>
-        public bool WrongAnswer()
+        public bool AnswerIsWrong()
         {
             Console.WriteLine("Question was incorrectly answered");
             Console.WriteLine(_players.Current() + " was sent to the penalty box");

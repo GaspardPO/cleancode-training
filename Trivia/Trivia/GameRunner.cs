@@ -14,17 +14,19 @@ namespace Trivia
 
             do
             {
-                aGame.Roll(rand.Next(5) + 1);
+                aGame.HasRolled(rand.Next(5) + 1);
+                
+                // Ask question if not in penalty box
 
                 if (rand.Next(9) == 7)
                 {
-                    _notAWinner = aGame.WasCorrectlyAnswered();
+                    _notAWinner = aGame.AnswerIsCorrect();
                 }
                 else
                 {
-                    _notAWinner = aGame.WrongAnswer();
+                    _notAWinner = aGame.AnswerIsWrong();
                 }
-            } while (_notAWinner);
+            } while (_notAWinner);  // !aGame.HasAWinner()
         }
     }
 }
