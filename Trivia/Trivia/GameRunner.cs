@@ -26,6 +26,7 @@ namespace Trivia
                 {
                     _notAWinner = aGame.AnswerIsWrong();
                 }
+                aGame.NextPlayer();
             } while (_notAWinner);  // !aGame.HasAWinner()
         }
     }

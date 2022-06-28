@@ -39,16 +39,13 @@ namespace Trivia
 
         public bool IsPlayable()
         {
-            return (HowManyPlayers() >= 2);
-        }
-        
-        private int HowManyPlayers()
-        {
-            return _players.Count;
+            // OK
+            return (_players.Count >= 2);
         }
 
         public void HasRolled(int roll)
         {
+            // KO
             Console.WriteLine(_players.Current() + " is the current player");
             Console.WriteLine("They have rolled a " + roll);
 
@@ -75,17 +72,18 @@ namespace Trivia
         }
         private bool PlayerIsInPenaltyBox()
         {
-
+            // OK
             return _players.Current().IsInPenaltyBox;
         }
         private bool PlayerIsNotLeavingPenaltyBox(int roll)
         {
-
+            // OK
             return PlayerIsInPenaltyBox() && roll % 2 == 0;
         }
 
         private void DisplayNewPlayerPlace()
         {
+            // KO
             Console.WriteLine(_players.Current()
                 + "'s new location is "
                 + Board.GetPlayerPlace(_players.Current()));
@@ -94,11 +92,13 @@ namespace Trivia
 
         private void MovePlayer(int roll)
         {
+            // KO
             _players.Current().Move(roll);
         }
 
         private void AskQuestion()
         {
+            // KO
             var currentCategory = CurrentCategory();
             string question = NextQuestion(currentCategory);
 
@@ -107,6 +107,7 @@ namespace Trivia
 
         private string NextQuestion(Categories currentCategory)
         {
+            // KO++
             var questions = currentCategory switch
             {
                 Categories.Pop => _popQuestions,
@@ -121,8 +122,14 @@ namespace Trivia
             return question;
         }
 
+        public bool HasAWinner()
+        {
+            return false;
+        }
+
         private Categories CurrentCategory()
         {
+            // OK
             return (_players.Current().GetPosition() % 4) switch
             {
                 0 => Categories.Pop,
@@ -139,6 +146,7 @@ namespace Trivia
         /// <returns></returns>
         public bool AnswerIsCorrect()
         {
+            // KO++
             var winner = true;
             if ((PlayerIsInPenaltyBox() && _isGettingOutOfPenaltyBox) || !PlayerIsInPenaltyBox())
             {
@@ -152,13 +160,12 @@ namespace Trivia
                 winner = _players.Current().GetScore() != 6;
             }
 
-            NextPlayer();
             return winner;
         }
 
-
-        private void NextPlayer()
+        public void NextPlayer()
         {
+            // OK
             _players.Next();
         }
 
@@ -168,11 +175,11 @@ namespace Trivia
         /// <returns></returns>
         public bool AnswerIsWrong()
         {
+            // KO
             Console.WriteLine("Question was incorrectly answered");
             Console.WriteLine(_players.Current() + " was sent to the penalty box");
             _players.Current().GoToPenaltyBox();
 
-            NextPlayer();
             //Must always return false 
             return true;
         }
