@@ -28,7 +28,7 @@ namespace Trivia
 
         public void Next()
         {
-            _currentPosition = _currentPosition + 1 == _players.Count ? 0 : _currentPosition+1;
+            _currentPosition = (_currentPosition + 1) % _players.Count;
         }
     }
 }

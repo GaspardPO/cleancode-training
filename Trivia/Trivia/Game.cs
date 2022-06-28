@@ -10,14 +10,13 @@ namespace Trivia
     /// </summary>
     public class Game
     {
-        private readonly List<Player> _players = new List<Player>();
+        private readonly Players _players = new Players();
 
         private readonly LinkedList<string> _popQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _scienceQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _rockQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _sportsQuestions = new LinkedList<string>();
 
-        private int _currentPlayer;
         private bool _isGettingOutOfPenaltyBox;
 
         public Game()
@@ -51,12 +50,12 @@ namespace Trivia
 
         public void Roll(int roll)
         {
-            Console.WriteLine(_players[_currentPlayer] + " is the current player");
+            Console.WriteLine(_players.Current() + " is the current player");
             Console.WriteLine("They have rolled a " + roll);
 
             if (PlayerIsNotLeavingPenaltyBox(roll))
             {
-                Console.WriteLine(_players[_currentPlayer] + " is not getting out of the penalty box");
+                Console.WriteLine(_players.Current() + " is not getting out of the penalty box");
                 _isGettingOutOfPenaltyBox = false;
                 return;
             }
@@ -66,7 +65,7 @@ namespace Trivia
                 //User is getting out of penalty box
                 _isGettingOutOfPenaltyBox = true;
                 //Write that user is getting out
-                Console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");
+                Console.WriteLine(_players.Current() + " is getting out of the penalty box");
             }
 
             // add roll to place        
@@ -78,7 +77,7 @@ namespace Trivia
         private bool PlayerIsInPenaltyBox()
         {
 
-            return _players[_currentPlayer].IsInPenaltyBox;
+            return _players.Current().IsInPenaltyBox;
         }
         private bool PlayerIsNotLeavingPenaltyBox(int roll)
         {
@@ -88,15 +87,15 @@ namespace Trivia
 
         private void DisplayNewPlayerPlace()
         {
-            Console.WriteLine(_players[_currentPlayer]
+            Console.WriteLine(_players.Current()
                 + "'s new location is "
-                + Board.GetPlayerPlace(_players[_currentPlayer]));
+                + Board.GetPlayerPlace(_players.Current()));
             Console.WriteLine("The category is " + CurrentCategory());
         }
 
         private void MovePlayer(int roll)
         {
-            _players[_currentPlayer].Move(roll);
+            _players.Current().Move(roll);
         }
 
         private void AskQuestion()
@@ -125,7 +124,7 @@ namespace Trivia
 
         private Categories CurrentCategory()
         {
-            return (_players[_currentPlayer].GetPosition() % 4) switch
+            return (_players.Current().GetPosition() % 4) switch
             {
                 0 => Categories.Pop,
                 1 => Categories.Science,
@@ -145,13 +144,13 @@ namespace Trivia
             if ((PlayerIsInPenaltyBox() && _isGettingOutOfPenaltyBox) || !PlayerIsInPenaltyBox())
             {
                 Console.WriteLine("Answer was correct!!!!");
-                _players[_currentPlayer].Score();
-                Console.WriteLine(_players[_currentPlayer]
+                _players.Current().Score();
+                Console.WriteLine(_players.Current()
                     + " now has "
-                    + _players[_currentPlayer].GetScore()
+                    + _players.Current().GetScore()
                     + " Gold Coins.");
 
-                winner = _players[_currentPlayer].GetScore() != 6;
+                winner = _players.Current().GetScore() != 6;
             }
 
             NextPlayer();
@@ -161,8 +160,7 @@ namespace Trivia
 
         private void NextPlayer()
         {
-            _currentPlayer++;
-            if (_currentPlayer == _players.Count) _currentPlayer = 0;
+            _players.Next();
         }
 
         /// <summary>
@@ -172,8 +170,8 @@ namespace Trivia
         public bool WrongAnswer()
         {
             Console.WriteLine("Question was incorrectly answered");
-            Console.WriteLine(_players[_currentPlayer] + " was sent to the penalty box");
-            _players[_currentPlayer].GoToPenaltyBox();
+            Console.WriteLine(_players.Current() + " was sent to the penalty box");
+            _players.Current().GoToPenaltyBox();
 
             NextPlayer();
             //Must always return false 
