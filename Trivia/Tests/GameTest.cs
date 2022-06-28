@@ -173,7 +173,7 @@ namespace Tests
         }
         
         [Fact]
-        public void Should()
+        public void Should_retrieve_next_questin_by_category()
         {
             //Arrange
             var questions = new Questions();
@@ -186,6 +186,37 @@ namespace Tests
             //Assert
             Assert.Equal(new ScienceQuestion("New science question"), scienceQuestion);
 
+        }
+
+                [Fact]
+        public void Should()
+        {
+            //Arrange
+            var questions = new Questions();
+            questions.Add(new PopQuestion("New pop question"));
+            questions.Add(new ScienceQuestion("New science question"));
+            questions.Add(new SportQuestion("New sport question"));
+            questions.Add(new SportQuestion("New sport question 2"));
+            
+            //Act
+            questions.NextQuestion(Categories.Sports);
+            var sportQuestion = questions.NextQuestion(Categories.Sports);
+            
+            //Assert
+            Assert.Equal(new SportQuestion("New sport question 2"), sportQuestion);
+
+        }
+    }
+
+    public class SportQuestion : Question
+    {
+        public SportQuestion(string label) : base(label)
+        {
+        }
+
+        public override Categories GetCategory()
+        {
+            return Categories.Sports;
         }
     }
 
@@ -250,15 +281,20 @@ namespace Tests
     public class Questions
     {
         private readonly List<IQuestion> _questions = new List<IQuestion>();
+        private Dictionary<Categories,int> _currentQuestion= new Dictionary<Categories,int>();
 
         public void Add(IQuestion question)
         {
+            if(!_currentQuestion.ContainsKey(question.GetCategory()))
+            {
+                _currentQuestion.Add(question.GetCategory(),0);
+            }
             _questions.Add(question);
         }
 
         public IQuestion NextQuestion(Categories category)
         {
-            return _questions.First(question => question.GetCategory().Equals(category));
+            return _questions.Where(question => question.GetCategory().Equals(category)).ToList()[_currentQuestion[category]];
         }
     }
 }
