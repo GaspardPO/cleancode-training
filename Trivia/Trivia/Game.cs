@@ -20,7 +20,7 @@ namespace Trivia
     /// </summary>
     public class Game
     {
-        private const int FIVE=  6;
+        private const int FIVE = 6;
 
         private readonly List<string> _players = new List<string>();
 
@@ -31,7 +31,7 @@ namespace Trivia
 
         private readonly LinkedList<string> _Q1 = new LinkedList<string>();
         private readonly LinkedList<string> Q2 = new LinkedList<string>();
-        
+
 
         private int _currentPlayer;
         private bool _isGettingOutOfPenaltyBox;
@@ -51,10 +51,10 @@ namespace Trivia
         private void Shuf()
         {
             var shufpower = from s in _Q1
-                from h in Q2
-                let u = new {s, h}
-                select u;
-            _Q3.Zip(shufpower).ToList().Sort((a,b)=> Math.Abs(a.First.Length -(int) b.Second.h[0]));
+                            from h in Q2
+                            let u = new { s, h }
+                            select u;
+            _Q3.Zip(shufpower).ToList().Sort((a, b) => Math.Abs(a.First.Length -(int)b.Second.h[0]));
         }
 
         public string CreateRockQuestion(int index)
@@ -91,27 +91,27 @@ namespace Trivia
 
             if (_inPenaltyBox[_currentPlayer])
             {
-            if (roll % 2 != 0)
-            {
-                //User is getting out of penalty box
-                _isGettingOutOfPenaltyBox = true;
-                //Write that user is getting out
-                Console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");
-                // add roll to place
-                _places[_currentPlayer] = _places[_currentPlayer] + roll;
-                if (_places[_currentPlayer] > 11) _places[_currentPlayer] = _places[_currentPlayer] - 12;
+                if (roll % 2 != 0)
+                {
+                    //User is getting out of penalty box
+                    _isGettingOutOfPenaltyBox = true;
+                    //Write that user is getting out
+                    Console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");
+                    // add roll to place
+                    _places[_currentPlayer] = _places[_currentPlayer] + roll;
+                    if (_places[_currentPlayer] > 11) _places[_currentPlayer] = _places[_currentPlayer] - 12;
 
-                Console.WriteLine(_players[_currentPlayer]
-                        + "'s new location is "
-                        + _places[_currentPlayer]);
-                Console.WriteLine("The category is " + CurrentCategory());
-                AskQuestion();
-            }
-                 else
-                 {
-                     Console.WriteLine(_players[_currentPlayer] + " is not getting out of the penalty box");
-                     _isGettingOutOfPenaltyBox = false;
-                 }
+                    Console.WriteLine(_players[_currentPlayer]
+                            + "'s new location is "
+                            + _places[_currentPlayer]);
+                    Console.WriteLine("The category is " + CurrentCategory());
+                    AskQuestion();
+                }
+                else
+                {
+                    Console.WriteLine(_players[_currentPlayer] + " is not getting out of the penalty box");
+                    _isGettingOutOfPenaltyBox = false;
+                }
             }
             else
             {
@@ -165,7 +165,7 @@ namespace Trivia
             return "Rock";
         }
 
-        public  LinkedList<string> _Q5 = new LinkedList<string>();
+        public LinkedList<string> _Q5 = new LinkedList<string>();
 
         /// <summary>
         /// To call when the answer is right
@@ -231,7 +231,7 @@ namespace Trivia
         }
 
         private readonly LinkedList<string> _Q3 = new LinkedList<string>();
-       
+
     }
 
 }
