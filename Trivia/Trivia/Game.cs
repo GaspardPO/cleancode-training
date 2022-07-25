@@ -4,17 +4,6 @@ using System.Linq;
 
 namespace Trivia
 {
-    ///////////////////////////////////////////////
-    ///                                          //
-    /// Jeu.cs                                   //
-    ///                                          //
-    /// COpyright The TrivaGame Ltd              //
-    ///                                          // 
-    /// Change : 2000-08-17 : add Rock questions //
-    /// Change : 2002-04-01: Formatting          //
-    /// Bug 528491 : Fix penaltybox bug where player is stuck // 
-    ///////////////////////////////////////////////
-
     /// <summary>
     /// The Game
     /// </summary>
@@ -29,8 +18,10 @@ namespace Trivia
 
         private readonly bool[] _inPenaltyBox = new bool[FIVE];
 
-        private readonly LinkedList<string> _Q1 = new LinkedList<string>();
-        private readonly LinkedList<string> Q2 = new LinkedList<string>();
+        private readonly LinkedList<string> _q1 = new LinkedList<string>();
+        private readonly LinkedList<string> _q2 = new LinkedList<string>();
+        private readonly LinkedList<string> _q3 = new LinkedList<string>();
+        private readonly LinkedList<string> _q5 = new LinkedList<string>();
 
 
         private int _currentPlayer;
@@ -40,33 +31,18 @@ namespace Trivia
         {
             for (var i = 0; i < 50; i++)
             {
-                _Q1.AddLast("Pop Question " + i);
-                Q2.AddLast(("Science Question " + i));
-                _Q3.AddLast(("Sports Question " + i));
-                _Q5.AddLast(CreateRockQuestion(i));
+                _q1.AddLast("Pop Question " + i);
+                _q2.AddLast(("Science Question " + i));
+                _q3.AddLast(("Sports Question " + i));
+                _q5.AddLast(CreateRockQuestion(i));
             }
-            //Shuf();
         }
 
-        private void Shuf()
-        {
-            var shufpower = from s in _Q1
-                            from h in Q2
-                            let u = new { s, h }
-                            select u;
-            _Q3.Zip(shufpower).ToList().Sort((a, b) => Math.Abs(a.First.Length -(int)b.Second.h[0]));
-        }
-
-        public string CreateRockQuestion(int index)
+        private string CreateRockQuestion(int index)
         {
             return "Rock Question " + index;
         }
-
-        public bool IsPlayable()
-        {
-            return (HowManyPlayers() >= 2);
-        }
-
+        
         public bool Add(string playerName)
         {
             _players.Add(playerName);
@@ -79,7 +55,7 @@ namespace Trivia
             return true;
         }
 
-        public int HowManyPlayers()
+        private int HowManyPlayers()
         {
             return _players.Count;
         }
@@ -130,25 +106,24 @@ namespace Trivia
         {
             if (CurrentCategory() == "Pop")
             {
-                Console.WriteLine(_Q1.First());
-                _Q1.RemoveFirst();
+                Console.WriteLine(_q1.First());
+                _q1.RemoveFirst();
             }
             if (CurrentCategory() == "Science")
             {
-                Console.WriteLine(Q2.First());
-                Q2.RemoveFirst();
+                Console.WriteLine(_q2.First());
+                _q2.RemoveFirst();
             }
             if (CurrentCategory() == "Sports")
             {
-                Console.WriteLine(_Q3.First());
-                _Q3.RemoveFirst();
+                Console.WriteLine(_q3.First());
+                _q3.RemoveFirst();
             }
             if (CurrentCategory() == "Rock")
             {
-                Console.WriteLine(_Q5.First());
-                _Q5.RemoveFirst();
+                Console.WriteLine(_q5.First());
+                _q5.RemoveFirst();
             }
-            //Shuf();
         }
 
         private string CurrentCategory()
@@ -165,7 +140,6 @@ namespace Trivia
             return "Rock";
         }
 
-        public LinkedList<string> _Q5 = new LinkedList<string>();
 
         /// <summary>
         /// To call when the answer is right
@@ -184,7 +158,7 @@ namespace Trivia
                             + _purses[_currentPlayer]
                             + " Gold Coins.");
 
-                    var winner = !(_purses[_currentPlayer] == 6);
+                    var winner = _purses[_currentPlayer] != 6;
                     _currentPlayer++;
                     if (_currentPlayer == _players.Count) _currentPlayer = 0;
 
@@ -206,7 +180,7 @@ namespace Trivia
                         + _purses[_currentPlayer]
                         + " Gold Coins.");
 
-                var winner = !(_purses[_currentPlayer] == 6);
+                var winner = _purses[_currentPlayer] != 6;
                 _currentPlayer++;
                 if (_currentPlayer == _players.Count) _currentPlayer = 0;
 
@@ -230,7 +204,6 @@ namespace Trivia
             return true;
         }
 
-        private readonly LinkedList<string> _Q3 = new LinkedList<string>();
 
     }
 
