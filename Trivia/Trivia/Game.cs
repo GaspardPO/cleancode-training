@@ -26,7 +26,7 @@ namespace Trivia
         private readonly bool[] _inPenaltyBox = new bool[MAX_PLAYERS];
         private readonly int[] _purses = new int[MAX_PLAYERS];
         private readonly int[] _places = new int[MAX_PLAYERS];
-        private readonly List<string> _players = new List<string>();
+        private readonly List<Player> _players = new List<Player>();
 
         private readonly LinkedList<string> _popDeck = new LinkedList<string>();
         private readonly LinkedList<string> _rockDeck = new LinkedList<string>();
@@ -56,7 +56,7 @@ namespace Trivia
 
         public bool Add(string playerName)
         {
-            _players.Add(playerName);
+            _players.Add(new Player(playerName));
 
             _places[HowManyPlayers()] = _startingPoint;
             _purses[HowManyPlayers()] = _numberOfCoinsAtStart;
