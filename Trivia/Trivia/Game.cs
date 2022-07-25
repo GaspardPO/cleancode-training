@@ -26,6 +26,8 @@ namespace Trivia
 
         private int _currentPlayer;
         private bool _isGettingOutOfPenaltyBox;
+        const int _startingPoint = 0;
+        const int _numberOfCoinsAtStart = 0;
 
         public Game()
         {
@@ -46,8 +48,9 @@ namespace Trivia
         public bool Add(string playerName)
         {
             _players.Add(playerName);
-            _places[HowManyPlayers()] = 0;
-            _purses[HowManyPlayers()] = 0;
+
+            _places[HowManyPlayers()] = _startingPoint;
+            _purses[HowManyPlayers()] = _numberOfCoinsAtStart;
             _inPenaltyBox[HowManyPlayers()] = false;
 
             Console.WriteLine(playerName + " was added");
@@ -67,7 +70,7 @@ namespace Trivia
 
             if (_inPenaltyBox[_currentPlayer])
             {
-                if (roll % 2 != 0)
+                if (IsOdd(roll))
                 {
                     //User is getting out of penalty box
                     _isGettingOutOfPenaltyBox = true;
@@ -100,6 +103,11 @@ namespace Trivia
                 Console.WriteLine("The category is " + CurrentCategory());
                 AskQuestion();
             }
+        }
+
+        private static bool IsOdd(int roll)
+        {
+            return roll % 2 != 0;
         }
 
         private void AskQuestion()
@@ -159,15 +167,13 @@ namespace Trivia
                             + " Gold Coins.");
 
                     var winner = _purses[_currentPlayer] != 6;
-                    _currentPlayer++;
-                    if (_currentPlayer == _players.Count) _currentPlayer = 0;
+                    ChangePlayer();
 
                     return winner;
                 }
                 else
                 {
-                    _currentPlayer++;
-                    if (_currentPlayer == _players.Count) _currentPlayer = 0;
+                    ChangePlayer();
                     return true;
                 }
             }
@@ -181,11 +187,16 @@ namespace Trivia
                         + " Gold Coins.");
 
                 var winner = _purses[_currentPlayer] != 6;
-                _currentPlayer++;
-                if (_currentPlayer == _players.Count) _currentPlayer = 0;
+                ChangePlayer();
 
                 return winner;
             }
+        }
+
+        private void ChangePlayer()
+        {
+            _currentPlayer++;
+            if (_currentPlayer == _players.Count) _currentPlayer = 0;
         }
 
         /// <summary>
@@ -198,8 +209,7 @@ namespace Trivia
             Console.WriteLine(_players[_currentPlayer] + " was sent to the penalty box");
             _inPenaltyBox[_currentPlayer] = true;
 
-            _currentPlayer++;
-            if (_currentPlayer == _players.Count) _currentPlayer = 0;
+            ChangePlayer();
             //Must alwys return false 
             return true;
         }
