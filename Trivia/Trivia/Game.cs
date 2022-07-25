@@ -5,48 +5,56 @@ using System.Linq;
 namespace Trivia
 {
     /// <summary>
-    /// The Game
+    ///     The Game
     /// </summary>
     public class Game
     {
+        public enum Category
+        {
+            Sports,
+            Rock,
+            Pop,
+            Science
+        }
+
         private const int MAX_PLAYERS = 6;
+        private const int _startingPoint = 0;
+        private const int _numberOfCoinsAtStart = 0;
+        private const int NUMBER_OF_COINS_TO_WIN = 6;
+        private const int BOARD_SIZE = 12;
+        private const int MAX_CATEGORIE_QUESTIONS = 50;
+        private readonly bool[] _inPenaltyBox = new bool[MAX_PLAYERS];
+
+        private readonly int[] _places = new int[MAX_PLAYERS];
 
         private readonly List<string> _players = new List<string>();
 
-        private readonly int[] _places = new int[MAX_PLAYERS];
-        private readonly int[] _purses = new int[MAX_PLAYERS];
-        private readonly bool[] _inPenaltyBox = new bool[MAX_PLAYERS];
-
         private readonly LinkedList<string> _popDeck = new LinkedList<string>();
+        private readonly int[] _purses = new int[MAX_PLAYERS];
+        private readonly LinkedList<string> _rockDeck = new LinkedList<string>();
         private readonly LinkedList<string> _scienceDeck = new LinkedList<string>();
         private readonly LinkedList<string> _sportsDeck = new LinkedList<string>();
-        private readonly LinkedList<string> _rockDeck = new LinkedList<string>();
 
 
         private int _currentPlayer;
         private bool _isGettingOutOfPenaltyBox;
-        const int _startingPoint = 0;
-        const int _numberOfCoinsAtStart = 0;
-        private const int NUMBER_OF_COINS_TO_WIN = 6;
-        private const int BOARD_SIZE = 12;
-        private const int MAX_CATEGORIE_QUESTIONS = 50;
 
         public Game()
         {
             for (var i = 0; i < MAX_CATEGORIE_QUESTIONS; i++)
             {
-                _popDeck.AddLast("Pop Question " + i);
-                _scienceDeck.AddLast(("Science Question " + i));
-                _sportsDeck.AddLast(("Sports Question " + i));
-                _rockDeck.AddLast(CreateRockQuestion(i));
+                _popDeck.AddLast(CreateQuestion(i, Category.Pop));
+                _scienceDeck.AddLast(CreateQuestion(i, Category.Science));
+                _sportsDeck.AddLast(CreateQuestion(i, Category.Sports));
+                _rockDeck.AddLast(CreateQuestion(i, Category.Rock));
             }
         }
 
-        private string CreateRockQuestion(int index)
+        private string CreateQuestion(int index, Category category)
         {
-            return "Rock Question " + index;
+            return category + " Question " + index;
         }
-        
+
         public bool Add(string playerName)
         {
             _players.Add(playerName);
@@ -67,7 +75,8 @@ namespace Trivia
 
         public void Roll(int roll)
         {
-            Console.WriteLine(_players[_currentPlayer] + " is the current player"); Console.WriteLine("They have rolled a " + roll);
+            Console.WriteLine(_players[_currentPlayer] + " is the current player");
+            Console.WriteLine("They have rolled a " + roll);
 
 
             if (_inPenaltyBox[_currentPlayer])
@@ -82,8 +91,8 @@ namespace Trivia
                     MovePlayer(roll);
 
                     Console.WriteLine(_players[_currentPlayer]
-                            + "'s new location is "
-                            + _places[_currentPlayer]);
+                                      + "'s new location is "
+                                      + _places[_currentPlayer]);
                     Console.WriteLine("The category is " + CurrentCategory());
                     AskQuestion();
                 }
@@ -98,8 +107,8 @@ namespace Trivia
                 MovePlayer(roll);
 
                 Console.WriteLine(_players[_currentPlayer]
-                        + "'s new location is "
-                        + _places[_currentPlayer]);
+                                  + "'s new location is "
+                                  + _places[_currentPlayer]);
                 Console.WriteLine("The category is " + CurrentCategory());
                 AskQuestion();
             }
@@ -118,45 +127,54 @@ namespace Trivia
 
         private void AskQuestion()
         {
-            if (CurrentCategory() == "Pop")
+            if (CurrentCategory() == Category.Pop)
             {
                 Console.WriteLine(_popDeck.First());
                 _popDeck.RemoveFirst();
             }
-            if (CurrentCategory() == "Science")
+
+            if (CurrentCategory() == Category.Science)
             {
                 Console.WriteLine(_scienceDeck.First());
                 _scienceDeck.RemoveFirst();
             }
-            if (CurrentCategory() == "Sports")
+
+            if (CurrentCategory() == Category.Sports)
             {
                 Console.WriteLine(_sportsDeck.First());
                 _sportsDeck.RemoveFirst();
             }
-            if (CurrentCategory() == "Rock")
+
+            if (CurrentCategory() == Category.Rock)
             {
                 Console.WriteLine(_rockDeck.First());
                 _rockDeck.RemoveFirst();
             }
         }
 
-        private string CurrentCategory()
+        private Category CurrentCategory()
         {
-            if (_places[_currentPlayer] == 0) return "Pop";
-            if (_places[_currentPlayer] == 4) return "Pop";
-            if (_places[_currentPlayer] == 8) return "Pop";
-            if (_places[_currentPlayer] == 1) return "Science";
-            if (_places[_currentPlayer] == 5) return "Science";
-            if (_places[_currentPlayer] == 9) return "Science";
-            if (_places[_currentPlayer] == 2) return "Sports";
-            if (_places[_currentPlayer] == 6) return "Sports";
-            if (_places[_currentPlayer] == 10) return "Sports";
-            return "Rock";
+            switch (_places[_currentPlayer])
+            {
+                case 0:
+                case 4:
+                case 8:
+                    return Category.Pop;
+                case 1:
+                case 5:
+                case 9:
+                    return Category.Science;
+                case 2:
+                case 6:
+                case 10:
+                    return Category.Sports;
+                default:
+                    return Category.Rock;
+            }
         }
 
-
         /// <summary>
-        /// To call when the answer is right
+        ///     To call when the answer is right
         /// </summary>
         /// <returns></returns>
         public bool WasCorrectlyAnswered()
@@ -168,29 +186,27 @@ namespace Trivia
                     Console.WriteLine("Answer was correct!!!!");
                     _purses[_currentPlayer]++;
                     Console.WriteLine(_players[_currentPlayer]
-                            + " now has "
-                            + _purses[_currentPlayer]
-                            + " Gold Coins.");
+                                      + " now has "
+                                      + _purses[_currentPlayer]
+                                      + " Gold Coins.");
 
                     var winner = _purses[_currentPlayer] != NUMBER_OF_COINS_TO_WIN;
                     ChangePlayer();
 
                     return winner;
                 }
-                else
-                {
-                    ChangePlayer();
-                    return true;
-                }
+
+                ChangePlayer();
+                return true;
             }
-            else
+
             {
                 Console.WriteLine("Answer was corrent!!!!");
                 _purses[_currentPlayer]++;
                 Console.WriteLine(_players[_currentPlayer]
-                        + " now has "
-                        + _purses[_currentPlayer]
-                        + " Gold Coins.");
+                                  + " now has "
+                                  + _purses[_currentPlayer]
+                                  + " Gold Coins.");
 
                 var winner = _purses[_currentPlayer] != NUMBER_OF_COINS_TO_WIN;
                 ChangePlayer();
@@ -206,7 +222,7 @@ namespace Trivia
         }
 
         /// <summary>
-        /// To call when the answer is right
+        ///     To call when the answer is right
         /// </summary>
         /// <returns></returns>
         public bool WrongAnswer()
@@ -219,8 +235,5 @@ namespace Trivia
             //Must alwys return false 
             return true;
         }
-
-
     }
-
 }
