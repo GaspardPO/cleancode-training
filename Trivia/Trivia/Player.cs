@@ -8,9 +8,12 @@ namespace Trivia
     {
         public string Name { get; }
 
-        public Player(string name)
+        public int Coins { get; set; }
+
+        public Player(string name, int coins)
         {
-            Name = name;    
+            Name = name;
+            Coins = coins;
         }
 
         public override string ToString()

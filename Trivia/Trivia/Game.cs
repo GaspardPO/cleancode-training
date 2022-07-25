@@ -24,7 +24,6 @@ namespace Trivia
         private const int MAX_CATEGORIE_QUESTIONS = 50;
 
         private readonly bool[] _inPenaltyBox = new bool[MAX_PLAYERS];
-        private readonly int[] _purses = new int[MAX_PLAYERS];
         private readonly int[] _places = new int[MAX_PLAYERS];
         private readonly List<Player> _players = new List<Player>();
 
@@ -56,10 +55,9 @@ namespace Trivia
 
         public bool Add(string playerName)
         {
-            _players.Add(new Player(playerName));
+            _players.Add(new Player(playerName, _numberOfCoinsAtStart));
 
             _places[HowManyPlayers()] = _startingPoint;
-            _purses[HowManyPlayers()] = _numberOfCoinsAtStart;
             _inPenaltyBox[HowManyPlayers()] = false;
 
             _logger.Log(playerName + " was added");
@@ -183,13 +181,13 @@ namespace Trivia
                 if (_isGettingOutOfPenaltyBox)
                 {
                     _logger.Log("Answer was correct!!!!");
-                    _purses[_currentPlayer]++;
+                    _players[_currentPlayer].Coins++;
                     _logger.Log(_players[_currentPlayer]
                                       + " now has "
-                                      + _purses[_currentPlayer]
+                                      + _players[_currentPlayer].Coins
                                       + " Gold Coins.");
 
-                    var winner = _purses[_currentPlayer] != NUMBER_OF_COINS_TO_WIN;
+                    var winner = _players[_currentPlayer].Coins != NUMBER_OF_COINS_TO_WIN;
                     ChangePlayer();
 
                     return winner;
@@ -201,13 +199,13 @@ namespace Trivia
 
             {
                 _logger.Log("Answer was corrent!!!!");
-                _purses[_currentPlayer]++;
+                _players[_currentPlayer].Coins++;
                 _logger.Log(_players[_currentPlayer]
                                   + " now has "
-                                  + _purses[_currentPlayer]
+                                  + _players[_currentPlayer].Coins
                                   + " Gold Coins.");
 
-                var winner = _purses[_currentPlayer] != NUMBER_OF_COINS_TO_WIN;
+                var winner = _players[_currentPlayer].Coins != NUMBER_OF_COINS_TO_WIN;
                 ChangePlayer();
 
                 return winner;
