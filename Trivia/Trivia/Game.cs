@@ -9,34 +9,36 @@ namespace Trivia
     /// </summary>
     public class Game
     {
-        private const int FIVE = 6;
+        private const int MAX_PLAYERS = 6;
 
         private readonly List<string> _players = new List<string>();
 
-        private readonly int[] _places = new int[6];
-        private readonly int[] _purses = new int[6];
+        private readonly int[] _places = new int[MAX_PLAYERS];
+        private readonly int[] _purses = new int[MAX_PLAYERS];
+        private readonly bool[] _inPenaltyBox = new bool[MAX_PLAYERS];
 
-        private readonly bool[] _inPenaltyBox = new bool[FIVE];
-
-        private readonly LinkedList<string> _q1 = new LinkedList<string>();
-        private readonly LinkedList<string> _q2 = new LinkedList<string>();
-        private readonly LinkedList<string> _q3 = new LinkedList<string>();
-        private readonly LinkedList<string> _q5 = new LinkedList<string>();
+        private readonly LinkedList<string> _popDeck = new LinkedList<string>();
+        private readonly LinkedList<string> _scienceDeck = new LinkedList<string>();
+        private readonly LinkedList<string> _sportsDeck = new LinkedList<string>();
+        private readonly LinkedList<string> _rockDeck = new LinkedList<string>();
 
 
         private int _currentPlayer;
         private bool _isGettingOutOfPenaltyBox;
         const int _startingPoint = 0;
         const int _numberOfCoinsAtStart = 0;
+        private const int NUMBER_OF_COINS_TO_WIN = 6;
+        private const int BOARD_SIZE = 12;
+        private const int MAX_CATEGORIE_QUESTIONS = 50;
 
         public Game()
         {
-            for (var i = 0; i < 50; i++)
+            for (var i = 0; i < MAX_CATEGORIE_QUESTIONS; i++)
             {
-                _q1.AddLast("Pop Question " + i);
-                _q2.AddLast(("Science Question " + i));
-                _q3.AddLast(("Sports Question " + i));
-                _q5.AddLast(CreateRockQuestion(i));
+                _popDeck.AddLast("Pop Question " + i);
+                _scienceDeck.AddLast(("Science Question " + i));
+                _sportsDeck.AddLast(("Sports Question " + i));
+                _rockDeck.AddLast(CreateRockQuestion(i));
             }
         }
 
@@ -77,8 +79,7 @@ namespace Trivia
                     //Write that user is getting out
                     Console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");
                     // add roll to place
-                    _places[_currentPlayer] = _places[_currentPlayer] + roll;
-                    if (_places[_currentPlayer] > 11) _places[_currentPlayer] = _places[_currentPlayer] - 12;
+                    MovePlayer(roll);
 
                     Console.WriteLine(_players[_currentPlayer]
                             + "'s new location is "
@@ -94,8 +95,7 @@ namespace Trivia
             }
             else
             {
-                _places[_currentPlayer] = _places[_currentPlayer] + roll;
-                if (_places[_currentPlayer] > 11) _places[_currentPlayer] = _places[_currentPlayer] - 12;
+                MovePlayer(roll);
 
                 Console.WriteLine(_players[_currentPlayer]
                         + "'s new location is "
@@ -103,6 +103,12 @@ namespace Trivia
                 Console.WriteLine("The category is " + CurrentCategory());
                 AskQuestion();
             }
+        }
+
+        private void MovePlayer(int roll)
+        {
+            _places[_currentPlayer] = _places[_currentPlayer] + roll;
+            if (_places[_currentPlayer] >= BOARD_SIZE) _places[_currentPlayer] = _places[_currentPlayer] - BOARD_SIZE;
         }
 
         private static bool IsOdd(int roll)
@@ -114,23 +120,23 @@ namespace Trivia
         {
             if (CurrentCategory() == "Pop")
             {
-                Console.WriteLine(_q1.First());
-                _q1.RemoveFirst();
+                Console.WriteLine(_popDeck.First());
+                _popDeck.RemoveFirst();
             }
             if (CurrentCategory() == "Science")
             {
-                Console.WriteLine(_q2.First());
-                _q2.RemoveFirst();
+                Console.WriteLine(_scienceDeck.First());
+                _scienceDeck.RemoveFirst();
             }
             if (CurrentCategory() == "Sports")
             {
-                Console.WriteLine(_q3.First());
-                _q3.RemoveFirst();
+                Console.WriteLine(_sportsDeck.First());
+                _sportsDeck.RemoveFirst();
             }
             if (CurrentCategory() == "Rock")
             {
-                Console.WriteLine(_q5.First());
-                _q5.RemoveFirst();
+                Console.WriteLine(_rockDeck.First());
+                _rockDeck.RemoveFirst();
             }
         }
 
@@ -166,7 +172,7 @@ namespace Trivia
                             + _purses[_currentPlayer]
                             + " Gold Coins.");
 
-                    var winner = _purses[_currentPlayer] != 6;
+                    var winner = _purses[_currentPlayer] != NUMBER_OF_COINS_TO_WIN;
                     ChangePlayer();
 
                     return winner;
@@ -186,7 +192,7 @@ namespace Trivia
                         + _purses[_currentPlayer]
                         + " Gold Coins.");
 
-                var winner = _purses[_currentPlayer] != 6;
+                var winner = _purses[_currentPlayer] != NUMBER_OF_COINS_TO_WIN;
                 ChangePlayer();
 
                 return winner;
