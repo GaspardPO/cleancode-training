@@ -1,24 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Trivia
+﻿namespace Trivia
 {
     public class Player
     {
         public string Name { get; }
 
-        public int Coins { get; set; }
+        public int Coins { get; set; } = 0;
 
-        public Player(string name, int coins)
+        public Player(string name)
         {
             Name = name;
-            Coins = coins;
         }
 
         public override string ToString()
         {
             return Name;
         }
+
+        public void EarnCoin() => Coins += 1;
     }
 }
