@@ -19,8 +19,8 @@ namespace Trivia
         private readonly Logger _logger = new Logger();
         
         private bool _isGettingOutOfPenaltyBox;
-        private const int MAX_CATEGORIE_QUESTIONS = 50;
-        private MainDeck _mainDeck = new MainDeck(MAX_CATEGORIE_QUESTIONS);
+        private const int NB_QUESTIONS_BY_CATEGORY = 50;
+        private MainDeck _mainDeck = new MainDeck(NB_QUESTIONS_BY_CATEGORY);
 
         public Game()
         {
