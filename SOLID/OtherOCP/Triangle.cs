@@ -6,5 +6,10 @@
         public int Hauteur { get; set; }
         public int Cote2 { get; set; }
         public int Cote3 { get; set; }
+
+        public double getArea()
+        {
+            return (double)(this.Base * this.Hauteur) / 2;
+        }
     }
 }
