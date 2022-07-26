@@ -17,7 +17,7 @@ namespace Trivia
         private readonly int[] _places = new int[MAX_PLAYERS];
         private readonly List<Player> _players = new List<Player>();
 
-        private readonly LinkedList<Question> _popDeck = new LinkedList<Question>();
+        private readonly Deck _popDeck = new Deck();
         private readonly LinkedList<Question> _rockDeck = new LinkedList<Question>();
         private readonly LinkedList<Question> _scienceDeck = new LinkedList<Question>();
         private readonly LinkedList<Question> _sportsDeck = new LinkedList<Question>();
@@ -31,7 +31,7 @@ namespace Trivia
         {
             for (var i = 0; i < MAX_CATEGORIE_QUESTIONS; i++)
             {
-                _popDeck.AddLast(new Question(i, Question.Categories.Pop));
+                //_popDeck.AddLast(new Question(i, Question.Categories.Pop));
                 _scienceDeck.AddLast(new Question(i, Question.Categories.Science));
                 _sportsDeck.AddLast(new Question(i, Question.Categories.Sports));
                 _rockDeck.AddLast(new Question(i, Question.Categories.Rock));
@@ -110,8 +110,7 @@ namespace Trivia
         {
             if (CurrentCategory() == Question.Categories.Pop)
             {
-                _logger.Log(_popDeck.First().ToString());
-                _popDeck.RemoveFirst();
+                _logger.Log(_popDeck.Draw().ToString());
             }
 
             if (CurrentCategory() == Question.Categories.Science)
