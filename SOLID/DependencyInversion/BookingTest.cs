@@ -1,5 +1,6 @@
 using Moq;
 using SOLID.DependencyInversion.domain.booking;
+using SOLID.DependencyInversion.domain.gateways;
 using SOLID.DependencyInversion.infrastructure;
 using Xunit;
 
@@ -7,12 +8,12 @@ namespace SOLID.DependencyInversion
 {
     public class BookingTest
     {
-        private Mock<AvailabilityDaoImpl> availabilities;
+        private Mock<IAvailabilityDao> availabilities;
         private BookingService booking;
 
         public BookingTest()
         {
-            availabilities = new Mock<AvailabilityDaoImpl>();
+            availabilities = new Mock<IAvailabilityDao>();
             booking = new BookingService(availabilities.Object);
         }
 

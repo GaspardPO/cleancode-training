@@ -1,3 +1,5 @@
+using SOLID.DependencyInversion.domain.gateways;
+
 namespace SOLID.DependencyInversion.infrastructure
 {
     public class AvailabilityDaoImpl : IAvailabilityDao {
