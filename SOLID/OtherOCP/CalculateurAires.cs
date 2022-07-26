@@ -9,24 +9,13 @@ namespace SOLID.OtherOCP
             var area = 0d;
             foreach (var figure in figures)
             {
-                switch (figure)
-                {
-                    case Rectangle figureRectangle:
-                    {
-                        var rectangle = figureRectangle;
-                        area += rectangle.Largeur * rectangle.Longueur;
-                        break;
-                    }
-                    case Triangle figureTriangle:
-                    {
-                        var triangle = figureTriangle;
-                        area += (double)(triangle.Base * triangle.Hauteur) / 2;
-                        break;
-                    }
-                }
+                area += figure.getArea();
+
             }
 
             return area;
         }
+
+
     }
 }

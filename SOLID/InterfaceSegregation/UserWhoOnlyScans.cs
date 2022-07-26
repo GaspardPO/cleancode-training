@@ -2,6 +2,11 @@ namespace SOLID.InterfaceSegregation
 {
     public class UserWhoOnlyScans {
 
-        Machine scanner;
+        IScanner scanner;
+
+        public void Scan()
+        {
+            scanner.Scan();
+        }
     }
 }
