@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Trivia
 {
@@ -7,13 +8,11 @@ namespace Trivia
     /// </summary>
     public class Game
     {
-        private const int _startingPoint = 0;
+        
         private const int NUMBER_OF_COINS_TO_WIN = 6;
-        private const int BOARD_SIZE = 12;
+        
 
         private int _currentPlayerIndex;
-        private const int MAX_PLAYERS = 6;
-        private readonly int[] _places = new int[MAX_PLAYERS];
         private readonly List<Player> _players = new List<Player>();
 
         private readonly Logger _logger = new Logger();
@@ -21,6 +20,7 @@ namespace Trivia
         private bool _isGettingOutOfPenaltyBox;
         private const int NB_QUESTIONS_BY_CATEGORY = 50;
         private MainDeck _mainDeck = new MainDeck(NB_QUESTIONS_BY_CATEGORY);
+        private Board _board = new Board();
 
         public Game()
         {
@@ -29,18 +29,14 @@ namespace Trivia
 
         public bool Add(string playerName)
         {
-            _players.Add(new Player(playerName));
+            var player = new Player(playerName);
+            _players.Add(player);
 
-            _places[HowManyPlayers()] = _startingPoint;
+            _board.PlaceAtStart(player);
 
             _logger.Log(playerName + " was added");
             _logger.Log("They are player number " + _players.Count);
             return true;
-        }
-
-        private int HowManyPlayers()
-        {
-            return _players.Count;
         }
 
         public void Roll(int roll)
@@ -58,11 +54,11 @@ namespace Trivia
                     //Write that user is getting out
                     _logger.Log(_players[_currentPlayerIndex] + " is getting out of the penalty box");
                     // add roll to place
-                    MovePlayer(roll);
+                    _board.MoveForward(_players[_currentPlayerIndex], roll);
 
                     _logger.Log(_players[_currentPlayerIndex]
                                       + "'s new location is "
-                                      + _places[_currentPlayerIndex]);
+                                      + _board.GetPosition(_players[_currentPlayerIndex]));
                     _logger.Log("The category is " + CurrentCategory());
                     AskQuestion();
                 }
@@ -74,20 +70,14 @@ namespace Trivia
             }
             else
             {
-                MovePlayer(roll);
+                _board.MoveForward(_players[_currentPlayerIndex], roll);
 
                 _logger.Log(_players[_currentPlayerIndex]
                                   + "'s new location is "
-                                  + _places[_currentPlayerIndex]);
+                                  + _board.GetPosition(_players[_currentPlayerIndex]));
                 _logger.Log("The category is " + CurrentCategory());
                 AskQuestion();
             }
-        }
-
-        private void MovePlayer(int roll)
-        {
-            _places[_currentPlayerIndex] = _places[_currentPlayerIndex] + roll;
-            if (_places[_currentPlayerIndex] >= BOARD_SIZE) _places[_currentPlayerIndex] = _places[_currentPlayerIndex] - BOARD_SIZE;
         }
 
         private static bool IsOdd(int roll)
@@ -102,7 +92,7 @@ namespace Trivia
 
         private Question.Categories CurrentCategory()
         {
-            switch (_places[_currentPlayerIndex])
+            switch (_board.GetPosition(_players[_currentPlayerIndex]))
             {
                 case 0:
                 case 4:
