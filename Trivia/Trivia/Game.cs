@@ -17,7 +17,7 @@ namespace Trivia
         private readonly int[] _places = new int[MAX_PLAYERS];
         private readonly List<Player> _players = new List<Player>();
 
-        private readonly Deck _popDeck = new Deck();
+        private readonly Deck _popDeck = new Deck(Question.Categories.Pop,MAX_CATEGORIE_QUESTIONS);
         private readonly LinkedList<Question> _rockDeck = new LinkedList<Question>();
         private readonly LinkedList<Question> _scienceDeck = new LinkedList<Question>();
         private readonly LinkedList<Question> _sportsDeck = new LinkedList<Question>();
@@ -31,7 +31,6 @@ namespace Trivia
         {
             for (var i = 0; i < MAX_CATEGORIE_QUESTIONS; i++)
             {
-                //_popDeck.AddLast(new Question(i, Question.Categories.Pop));
                 _scienceDeck.AddLast(new Question(i, Question.Categories.Science));
                 _sportsDeck.AddLast(new Question(i, Question.Categories.Sports));
                 _rockDeck.AddLast(new Question(i, Question.Categories.Rock));

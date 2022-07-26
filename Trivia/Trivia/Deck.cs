@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Trivia
@@ -8,11 +7,11 @@ namespace Trivia
     {
         private readonly LinkedList<Question> _list = new LinkedList<Question>();
 
-        public Deck()
+        public Deck(Question.Categories categorie, int deckSize)
         {
-            for (var i = 0; i < 50; i++)
+            for (var i = 0; i < deckSize; i++)
             {
-                _list.AddLast(new Question(i, Question.Categories.Pop));
+                _list.AddLast(new Question(i, categorie));
             }
         }
 
