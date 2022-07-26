@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace Trivia
 {
@@ -8,28 +7,29 @@ namespace Trivia
     /// </summary>
     public class Game
     {
-        private const int MAX_PLAYERS = 6;
+        
         private const int _startingPoint = 0;
         private const int NUMBER_OF_COINS_TO_WIN = 6;
         private const int BOARD_SIZE = 12;
-        private const int MAX_CATEGORIE_QUESTIONS = 50;
-        
+
+        private int _currentPlayerIndex;
+        private const int MAX_PLAYERS = 6;
         private readonly int[] _places = new int[MAX_PLAYERS];
         private readonly List<Player> _players = new List<Player>();
 
-        private readonly Deck _popDeck = new Deck(Question.Categories.Pop,MAX_CATEGORIE_QUESTIONS);
+        private const int MAX_CATEGORIE_QUESTIONS = 50;
+        private readonly Deck _popDeck = new Deck(Question.Categories.Pop, MAX_CATEGORIE_QUESTIONS);
         private readonly Deck _rockDeck = new Deck(Question.Categories.Rock, MAX_CATEGORIE_QUESTIONS);
         private readonly Deck _scienceDeck = new Deck(Question.Categories.Science, MAX_CATEGORIE_QUESTIONS);
         private readonly Deck _sportDeck = new Deck(Question.Categories.Sports, MAX_CATEGORIE_QUESTIONS);
+        
         private readonly Logger _logger = new Logger();
-
-
-        private int _currentPlayerIndex;
+        
         private bool _isGettingOutOfPenaltyBox;
 
         public Game()
         {
-            
+
         }
 
         public bool Add(string playerName)
