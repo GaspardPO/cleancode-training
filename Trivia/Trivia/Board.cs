@@ -20,5 +20,26 @@ namespace Trivia
             _playerPosition[player] += roll;
             _playerPosition[player] %= BoardSize;
         }
+
+        public Question.Categories CurrentCategory(Player player)
+        {
+            switch (this.GetPosition(player))
+            {
+                case 0:
+                case 4:
+                case 8:
+                    return Question.Categories.Pop;
+                case 1:
+                case 5:
+                case 9:
+                    return Question.Categories.Science;
+                case 2:
+                case 6:
+                case 10:
+                    return Question.Categories.Sports;
+                default:
+                    return Question.Categories.Rock;
+            }
+        }
     }
 }

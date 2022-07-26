@@ -59,7 +59,7 @@ namespace Trivia
                     _logger.Log(_players[_currentPlayerIndex]
                                       + "'s new location is "
                                       + _board.GetPosition(_players[_currentPlayerIndex]));
-                    _logger.Log("The category is " + CurrentCategory());
+                    _logger.Log("The category is " + _board.CurrentCategory(_players[_currentPlayerIndex]));
                     AskQuestion();
                 }
                 else
@@ -75,7 +75,7 @@ namespace Trivia
                 _logger.Log(_players[_currentPlayerIndex]
                                   + "'s new location is "
                                   + _board.GetPosition(_players[_currentPlayerIndex]));
-                _logger.Log("The category is " + CurrentCategory());
+                _logger.Log("The category is " + _board.CurrentCategory(_players[_currentPlayerIndex]));
                 AskQuestion();
             }
         }
@@ -87,28 +87,7 @@ namespace Trivia
 
         private void AskQuestion() 
         {
-            _logger.Log(_mainDeck.Draw(CurrentCategory()).ToString());
-        }
-
-        private Question.Categories CurrentCategory()
-        {
-            switch (_board.GetPosition(_players[_currentPlayerIndex]))
-            {
-                case 0:
-                case 4:
-                case 8:
-                    return Question.Categories.Pop;
-                case 1:
-                case 5:
-                case 9:
-                    return Question.Categories.Science;
-                case 2:
-                case 6:
-                case 10:
-                    return Question.Categories.Sports;
-                default:
-                    return Question.Categories.Rock;
-            }
+            _logger.Log(_mainDeck.Draw(_board.CurrentCategory(_players[_currentPlayerIndex])).ToString());
         }
 
         /// <summary>
