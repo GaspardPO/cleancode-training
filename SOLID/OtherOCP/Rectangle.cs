@@ -10,5 +10,9 @@
             return this.Largeur * this.Longueur ;
         }
 
+        public double getPerimeter()
+        {
+            return (this.Largeur + this.Longueur) * 2;
+        }
     }
 }

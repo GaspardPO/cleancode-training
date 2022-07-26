@@ -11,5 +11,10 @@
         {
             return (double)(this.Base * this.Hauteur) / 2;
         }
+
+        public double getPerimeter()
+        {
+            return this.Base + this.Cote2 + this.Cote3;
+        }
     }
 }
