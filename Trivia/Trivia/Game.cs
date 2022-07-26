@@ -18,9 +18,9 @@ namespace Trivia
         private readonly List<Player> _players = new List<Player>();
 
         private readonly Deck _popDeck = new Deck(Question.Categories.Pop,MAX_CATEGORIE_QUESTIONS);
-        private readonly LinkedList<Question> _rockDeck = new LinkedList<Question>();
-        private readonly LinkedList<Question> _scienceDeck = new LinkedList<Question>();
-        private readonly LinkedList<Question> _sportsDeck = new LinkedList<Question>();
+        private readonly Deck _rockDeck = new Deck(Question.Categories.Rock, MAX_CATEGORIE_QUESTIONS);
+        private readonly Deck _scienceDeck = new Deck(Question.Categories.Science, MAX_CATEGORIE_QUESTIONS);
+        private readonly Deck _sportDeck = new Deck(Question.Categories.Sports, MAX_CATEGORIE_QUESTIONS);
         private readonly Logger _logger = new Logger();
 
 
@@ -29,12 +29,7 @@ namespace Trivia
 
         public Game()
         {
-            for (var i = 0; i < MAX_CATEGORIE_QUESTIONS; i++)
-            {
-                _scienceDeck.AddLast(new Question(i, Question.Categories.Science));
-                _sportsDeck.AddLast(new Question(i, Question.Categories.Sports));
-                _rockDeck.AddLast(new Question(i, Question.Categories.Rock));
-            }
+            
         }
 
         public bool Add(string playerName)
@@ -114,20 +109,17 @@ namespace Trivia
 
             if (CurrentCategory() == Question.Categories.Science)
             {
-                _logger.Log(_scienceDeck.First().ToString());
-                _scienceDeck.RemoveFirst();
+                _logger.Log(_scienceDeck.Draw().ToString());
             }
 
             if (CurrentCategory() == Question.Categories.Sports)
             {
-                _logger.Log(_sportsDeck.First().ToString());
-                _sportsDeck.RemoveFirst();
+                _logger.Log(_sportDeck.Draw().ToString());
             }
 
             if (CurrentCategory() == Question.Categories.Rock)
             {
-                _logger.Log(_rockDeck.First().ToString());
-                _rockDeck.RemoveFirst();
+                _logger.Log(_rockDeck.Draw().ToString());
             }
         }
 
