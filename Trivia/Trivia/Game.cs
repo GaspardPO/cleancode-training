@@ -18,12 +18,10 @@ namespace Trivia
 
         private const int MAX_PLAYERS = 6;
         private const int _startingPoint = 0;
-        private const int _numberOfCoinsAtStart = 0;
         private const int NUMBER_OF_COINS_TO_WIN = 6;
         private const int BOARD_SIZE = 12;
         private const int MAX_CATEGORIE_QUESTIONS = 50;
-
-        private readonly bool[] _inPenaltyBox = new bool[MAX_PLAYERS];
+        
         private readonly int[] _places = new int[MAX_PLAYERS];
         private readonly List<Player> _players = new List<Player>();
 
@@ -31,7 +29,7 @@ namespace Trivia
         private readonly LinkedList<string> _rockDeck = new LinkedList<string>();
         private readonly LinkedList<string> _scienceDeck = new LinkedList<string>();
         private readonly LinkedList<string> _sportsDeck = new LinkedList<string>();
-        private readonly Logger _logger= new Logger();
+        private readonly Logger _logger = new Logger();
 
 
         private int _currentPlayerIndex;
@@ -58,7 +56,6 @@ namespace Trivia
             _players.Add(new Player(playerName));
 
             _places[HowManyPlayers()] = _startingPoint;
-            _inPenaltyBox[HowManyPlayers()] = false;
 
             _logger.Log(playerName + " was added");
             _logger.Log("They are player number " + _players.Count);
@@ -76,7 +73,7 @@ namespace Trivia
             _logger.Log("They have rolled a " + roll);
 
 
-            if (_inPenaltyBox[_currentPlayerIndex])
+            if (_players[_currentPlayerIndex].IsInPenaltyBox)
             {
                 if (IsOdd(roll))
                 {
@@ -177,7 +174,7 @@ namespace Trivia
         public bool WasCorrectlyAnswered()
         {
             var currentPlayer = _players[_currentPlayerIndex];
-            if (_inPenaltyBox[_currentPlayerIndex])
+            if (currentPlayer.IsInPenaltyBox)
             {
                 if (_isGettingOutOfPenaltyBox)
                 {
@@ -227,7 +224,7 @@ namespace Trivia
         {
             _logger.Log("Question was incorrectly answered");
             _logger.Log(_players[_currentPlayerIndex] + " was sent to the penalty box");
-            _inPenaltyBox[_currentPlayerIndex] = true;
+            _players[_currentPlayerIndex].GoToPenaltyBox();
 
             ChangePlayer();
             //Must alwys return false 

@@ -6,16 +6,18 @@
 
         public int Coins { get; set; } = 0;
 
+        public bool IsInPenaltyBox { get; private set; }
+
         public Player(string name)
         {
             Name = name;
         }
 
-        public override string ToString()
-        {
-            return Name;
-        }
-
+        public override string ToString() => Name;
+        
         public void EarnCoin() => Coins += 1;
+
+        public void GoToPenaltyBox() => IsInPenaltyBox = true;
+
     }
 }
