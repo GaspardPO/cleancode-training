@@ -7,7 +7,6 @@ namespace Trivia
     /// </summary>
     public class Game
     {
-        
         private const int _startingPoint = 0;
         private const int NUMBER_OF_COINS_TO_WIN = 6;
         private const int BOARD_SIZE = 12;
@@ -17,15 +16,11 @@ namespace Trivia
         private readonly int[] _places = new int[MAX_PLAYERS];
         private readonly List<Player> _players = new List<Player>();
 
-        private const int MAX_CATEGORIE_QUESTIONS = 50;
-        private readonly Deck _popDeck = new Deck(Question.Categories.Pop, MAX_CATEGORIE_QUESTIONS);
-        private readonly Deck _rockDeck = new Deck(Question.Categories.Rock, MAX_CATEGORIE_QUESTIONS);
-        private readonly Deck _scienceDeck = new Deck(Question.Categories.Science, MAX_CATEGORIE_QUESTIONS);
-        private readonly Deck _sportDeck = new Deck(Question.Categories.Sports, MAX_CATEGORIE_QUESTIONS);
-        
         private readonly Logger _logger = new Logger();
         
         private bool _isGettingOutOfPenaltyBox;
+        private const int MAX_CATEGORIE_QUESTIONS = 50;
+        private MainDeck _mainDeck = new MainDeck(MAX_CATEGORIE_QUESTIONS);
 
         public Game()
         {
@@ -100,27 +95,9 @@ namespace Trivia
             return roll % 2 != 0;
         }
 
-        private void AskQuestion()
+        private void AskQuestion() 
         {
-            if (CurrentCategory() == Question.Categories.Pop)
-            {
-                _logger.Log(_popDeck.Draw().ToString());
-            }
-
-            if (CurrentCategory() == Question.Categories.Science)
-            {
-                _logger.Log(_scienceDeck.Draw().ToString());
-            }
-
-            if (CurrentCategory() == Question.Categories.Sports)
-            {
-                _logger.Log(_sportDeck.Draw().ToString());
-            }
-
-            if (CurrentCategory() == Question.Categories.Rock)
-            {
-                _logger.Log(_rockDeck.Draw().ToString());
-            }
+            _logger.Log(_mainDeck.Draw(CurrentCategory()).ToString());
         }
 
         private Question.Categories CurrentCategory()
