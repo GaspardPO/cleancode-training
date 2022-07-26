@@ -15,7 +15,16 @@ namespace Tests
             Assert.Contains("Pop", question.ToString());
         }
 
-        //Draw une carte donne bien la première, qui n'y est plus après
-        
+        [Fact]
+        public void Draw_a_card_removed_it()
+        {
+            var deck = new Deck(Question.Categories.Pop, 30);
+
+            var question0 = deck.Draw();
+            var question1 = deck.Draw();
+
+            Assert.Contains("0",question0.ToString());
+            Assert.Contains("1",question1.ToString());
+        }
     }
 }
