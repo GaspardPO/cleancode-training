@@ -8,14 +8,6 @@ namespace Trivia
     /// </summary>
     public class Game
     {
-        public enum Category
-        {
-            Sports,
-            Rock,
-            Pop,
-            Science
-        }
-
         private const int MAX_PLAYERS = 6;
         private const int _startingPoint = 0;
         private const int NUMBER_OF_COINS_TO_WIN = 6;
@@ -25,10 +17,10 @@ namespace Trivia
         private readonly int[] _places = new int[MAX_PLAYERS];
         private readonly List<Player> _players = new List<Player>();
 
-        private readonly LinkedList<string> _popDeck = new LinkedList<string>();
-        private readonly LinkedList<string> _rockDeck = new LinkedList<string>();
-        private readonly LinkedList<string> _scienceDeck = new LinkedList<string>();
-        private readonly LinkedList<string> _sportsDeck = new LinkedList<string>();
+        private readonly LinkedList<Question> _popDeck = new LinkedList<Question>();
+        private readonly LinkedList<Question> _rockDeck = new LinkedList<Question>();
+        private readonly LinkedList<Question> _scienceDeck = new LinkedList<Question>();
+        private readonly LinkedList<Question> _sportsDeck = new LinkedList<Question>();
         private readonly Logger _logger = new Logger();
 
 
@@ -39,16 +31,11 @@ namespace Trivia
         {
             for (var i = 0; i < MAX_CATEGORIE_QUESTIONS; i++)
             {
-                _popDeck.AddLast(CreateQuestion(i, Category.Pop));
-                _scienceDeck.AddLast(CreateQuestion(i, Category.Science));
-                _sportsDeck.AddLast(CreateQuestion(i, Category.Sports));
-                _rockDeck.AddLast(CreateQuestion(i, Category.Rock));
+                _popDeck.AddLast(new Question(i, Question.Categories.Pop));
+                _scienceDeck.AddLast(new Question(i, Question.Categories.Science));
+                _sportsDeck.AddLast(new Question(i, Question.Categories.Sports));
+                _rockDeck.AddLast(new Question(i, Question.Categories.Rock));
             }
-        }
-
-        private string CreateQuestion(int index, Category category)
-        {
-            return category + " Question " + index;
         }
 
         public bool Add(string playerName)
@@ -121,49 +108,49 @@ namespace Trivia
 
         private void AskQuestion()
         {
-            if (CurrentCategory() == Category.Pop)
+            if (CurrentCategory() == Question.Categories.Pop)
             {
-                _logger.Log(_popDeck.First());
+                _logger.Log(_popDeck.First().ToString());
                 _popDeck.RemoveFirst();
             }
 
-            if (CurrentCategory() == Category.Science)
+            if (CurrentCategory() == Question.Categories.Science)
             {
-                _logger.Log(_scienceDeck.First());
+                _logger.Log(_scienceDeck.First().ToString());
                 _scienceDeck.RemoveFirst();
             }
 
-            if (CurrentCategory() == Category.Sports)
+            if (CurrentCategory() == Question.Categories.Sports)
             {
-                _logger.Log(_sportsDeck.First());
+                _logger.Log(_sportsDeck.First().ToString());
                 _sportsDeck.RemoveFirst();
             }
 
-            if (CurrentCategory() == Category.Rock)
+            if (CurrentCategory() == Question.Categories.Rock)
             {
-                _logger.Log(_rockDeck.First());
+                _logger.Log(_rockDeck.First().ToString());
                 _rockDeck.RemoveFirst();
             }
         }
 
-        private Category CurrentCategory()
+        private Question.Categories CurrentCategory()
         {
             switch (_places[_currentPlayerIndex])
             {
                 case 0:
                 case 4:
                 case 8:
-                    return Category.Pop;
+                    return Question.Categories.Pop;
                 case 1:
                 case 5:
                 case 9:
-                    return Category.Science;
+                    return Question.Categories.Science;
                 case 2:
                 case 6:
                 case 10:
-                    return Category.Sports;
+                    return Question.Categories.Sports;
                 default:
-                    return Category.Rock;
+                    return Question.Categories.Rock;
             }
         }
 
