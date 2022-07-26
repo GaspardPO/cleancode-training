@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Trivia
+﻿namespace Trivia
 {
     /// <summary>
     ///     The Game
@@ -12,8 +9,7 @@ namespace Trivia
         private const int NUMBER_OF_COINS_TO_WIN = 6;
         
 
-        private int _currentPlayerIndex;
-        private readonly List<Player> _players = new List<Player>();
+        private readonly PlayerGroup _players = new PlayerGroup();
 
         private readonly Logger _logger = new Logger();
         
@@ -41,41 +37,41 @@ namespace Trivia
 
         public void Roll(int roll)
         {
-            _logger.Log(_players[_currentPlayerIndex] + " is the current player");
+            _logger.Log(_players.GetCurrent() + " is the current player");
             _logger.Log("They have rolled a " + roll);
 
 
-            if (_players[_currentPlayerIndex].IsInPenaltyBox)
+            if (_players.GetCurrent().IsInPenaltyBox)
             {
                 if (IsOdd(roll))
                 {
                     //User is getting out of penalty box
                     _isGettingOutOfPenaltyBox = true;
                     //Write that user is getting out
-                    _logger.Log(_players[_currentPlayerIndex] + " is getting out of the penalty box");
+                    _logger.Log(_players.GetCurrent() + " is getting out of the penalty box");
                     // add roll to place
-                    _board.MoveForward(_players[_currentPlayerIndex], roll);
+                    _board.MoveForward(_players.GetCurrent(), roll);
 
-                    _logger.Log(_players[_currentPlayerIndex]
+                    _logger.Log(_players.GetCurrent()
                                       + "'s new location is "
-                                      + _board.GetPosition(_players[_currentPlayerIndex]));
-                    _logger.Log("The category is " + _board.CurrentCategory(_players[_currentPlayerIndex]));
+                                      + _board.GetPosition(_players.GetCurrent()));
+                    _logger.Log("The category is " + _board.CurrentCategory(_players.GetCurrent()));
                     AskQuestion();
                 }
                 else
                 {
-                    _logger.Log(_players[_currentPlayerIndex] + " is not getting out of the penalty box");
+                    _logger.Log(_players.GetCurrent() + " is not getting out of the penalty box");
                     _isGettingOutOfPenaltyBox = false;
                 }
             }
             else
             {
-                _board.MoveForward(_players[_currentPlayerIndex], roll);
+                _board.MoveForward(_players.GetCurrent(), roll);
 
-                _logger.Log(_players[_currentPlayerIndex]
+                _logger.Log(_players.GetCurrent()
                                   + "'s new location is "
-                                  + _board.GetPosition(_players[_currentPlayerIndex]));
-                _logger.Log("The category is " + _board.CurrentCategory(_players[_currentPlayerIndex]));
+                                  + _board.GetPosition(_players.GetCurrent()));
+                _logger.Log("The category is " + _board.CurrentCategory(_players.GetCurrent()));
                 AskQuestion();
             }
         }
@@ -87,7 +83,7 @@ namespace Trivia
 
         private void AskQuestion() 
         {
-            _logger.Log(_mainDeck.Draw(_board.CurrentCategory(_players[_currentPlayerIndex])).ToString());
+            _logger.Log(_mainDeck.Draw(_board.CurrentCategory(_players.GetCurrent())).ToString());
         }
 
         /// <summary>
@@ -96,7 +92,7 @@ namespace Trivia
         /// <returns></returns>
         public bool WasCorrectlyAnswered()
         {
-            var currentPlayer = _players[_currentPlayerIndex];
+            var currentPlayer = _players.GetCurrent();
             if (currentPlayer.IsInPenaltyBox)
             {
                 if (_isGettingOutOfPenaltyBox)
@@ -109,12 +105,12 @@ namespace Trivia
                                       + " Gold Coins.");
 
                     var winner = currentPlayer.Coins != NUMBER_OF_COINS_TO_WIN;
-                    ChangePlayer();
+                    _players.ChangePlayer();
 
                     return winner;
                 }
 
-                ChangePlayer();
+                _players.ChangePlayer();
                 return true;
             }
 
@@ -127,17 +123,13 @@ namespace Trivia
                                   + " Gold Coins.");
 
                 var winner = currentPlayer.Coins != NUMBER_OF_COINS_TO_WIN;
-                ChangePlayer();
+                _players.ChangePlayer();
 
                 return winner;
             }
         }
 
-        private void ChangePlayer()
-        {
-            _currentPlayerIndex++;
-            if (_currentPlayerIndex == _players.Count) _currentPlayerIndex = 0;
-        }
+        
 
         /// <summary>
         ///     To call when the answer is right
@@ -146,10 +138,10 @@ namespace Trivia
         public bool WrongAnswer()
         {
             _logger.Log("Question was incorrectly answered");
-            _logger.Log(_players[_currentPlayerIndex] + " was sent to the penalty box");
-            _players[_currentPlayerIndex].GoToPenaltyBox();
+            _logger.Log(_players.GetCurrent() + " was sent to the penalty box");
+            _players.GetCurrent().GoToPenaltyBox();
 
-            ChangePlayer();
+            _players.ChangePlayer();
             //Must alwys return false 
             return true;
         }
